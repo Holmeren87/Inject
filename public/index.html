@@ -1,18 +1,1789 @@
 <!doctype html>
 <html lang="da">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Inject.dk</title>
-  <meta name="description" content="Inject.dk – sprøjtestøbning og produktudvikling.">
-  <style>
-    :root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0f1115;color:#f5f7fa;font-family:Arial,Helvetica,sans-serif}main{text-align:center;padding:40px}h1{font-size:clamp(48px,10vw,110px);margin:0 0 16px;letter-spacing:-.05em}p{font-size:clamp(18px,2.5vw,28px);margin:0;color:#aeb6c2}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Inject Copenhagen</title>
+<meta name="description" content="Inject Copenhagen sprøjtestøber præcisionsdele i termoplast på en Babyplast 6/12 – prototyper, små og mellemstore serier og mikrodele. Tlf. 47 47 03 03 · contact@inject.dk · CVR 46414772.">
+<meta name="theme-color" content="#0a0808">
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"LocalBusiness","name":"Inject Copenhagen","description":"Sprøjtestøbning af præcisionsdele i termoplast på Babyplast 6/12.","telephone":"+45 47 47 03 03","email":"contact@inject.dk","vatID":"DK46414772","address":{"@type":"PostalAddress","addressLocality":"København","addressCountry":"DK"}}</script>
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#0a0808;
+  --bg2:#120d0d;
+  --panel:rgba(15,11,11,.68);
+  --line:rgba(237,232,227,.11);
+  --line2:rgba(237,232,227,.22);
+  --bone:#ede8e3;
+  --bone2:rgba(237,232,227,.84);
+  --mute:#a39893;
+  --dim:#6a605d;
+  --red:#e3132f;
+  --red-hi:#ff2b45;
+  --melt:#ff6a1f;
+  --hot:#ffc27a;
+  --display:"Archivo","Arial Black",Impact,system-ui,sans-serif;
+  --body:"Instrument Sans","Helvetica Neue",Arial,system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --gut:clamp(16px,4.2vw,68px);
+  --maxw:1520px;
+  --ease:cubic-bezier(.2,.75,.12,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background:var(--bg);-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--bone);font-family:var(--body);font-size:17px;line-height:1.55;margin:0;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+a{color:inherit}
+h1,h2,h3,p,dl,dd,ol,ul{margin:0}
+::selection{background:var(--red);color:#fff}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.red{color:var(--red)}
+.mono{font-family:var(--mono)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- stage ---------- */
+#gl{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0;outline:none}
+.bgfx{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+   radial-gradient(55% 45% at 72% 58%,rgba(227,19,47,.20),transparent 70%),
+   radial-gradient(35% 30% at 62% 62%,rgba(255,106,31,.10),transparent 70%),
+   linear-gradient(transparent 0 calc(100% - 1px),rgba(237,232,227,.04) 0) 0 0/100% 64px,
+   linear-gradient(90deg,transparent 0 calc(100% - 1px),rgba(237,232,227,.04) 0) 0 0/64px 100%,
+   var(--bg)}
+.gl-ready .bgfx{opacity:0;transition:opacity 1.2s}
+.scrim{position:fixed;top:0;bottom:0;width:64%;z-index:1;pointer-events:none;opacity:0;transition:opacity 1s var(--ease)}
+.scrim-l{left:0;background:linear-gradient(90deg,rgba(10,8,8,.82) 0%,rgba(10,8,8,.55) 48%,rgba(10,8,8,0) 100%)}
+.scrim-r{right:0;background:linear-gradient(270deg,rgba(10,8,8,.82) 0%,rgba(10,8,8,.55) 48%,rgba(10,8,8,0) 100%)}
+body[data-side="l"] .scrim-l,body[data-side="r"] .scrim-r{opacity:1}
+body[data-side="c"] .scrim-l{opacity:1;width:100%;background:linear-gradient(180deg,rgba(10,8,8,.2) 0%,rgba(10,8,8,.72) 30%,rgba(10,8,8,.78) 72%,rgba(10,8,8,.25) 100%)}
+.vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(125% 95% at 50% 50%,transparent 58%,rgba(0,0,0,.7) 100%)}
+.grain{position:fixed;inset:-60%;z-index:1;pointer-events:none;opacity:.075;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation:grain 1.2s steps(6) infinite}
+@keyframes grain{0%,100%{transform:translate(0,0)}20%{transform:translate(-4%,3%)}40%{transform:translate(3%,-4%)}60%{transform:translate(-3%,-2%)}80%{transform:translate(4%,4%)}}
+.frame{position:fixed;z-index:3;pointer-events:none;top:calc(env(safe-area-inset-top,0px) + 12px);bottom:calc(env(safe-area-inset-bottom,0px) + 12px);left:12px;right:12px}
+.frame i{position:absolute;width:16px;height:16px;border:0 solid rgba(237,232,227,.3)}
+.frame i:nth-child(1){top:0;left:0;border-top-width:1px;border-left-width:1px}
+.frame i:nth-child(2){top:0;right:0;border-top-width:1px;border-right-width:1px}
+.frame i:nth-child(3){bottom:0;left:0;border-bottom-width:1px;border-left-width:1px}
+.frame i:nth-child(4){bottom:0;right:0;border-bottom-width:1px;border-right-width:1px}
+
+/* ---------- 3D callouts ---------- */
+#labels{position:fixed;inset:0;z-index:3;pointer-events:none;overflow:hidden}
+.lbl{position:absolute;left:0;top:0;opacity:0;will-change:transform,opacity}
+.lbl .dot{position:absolute;left:-5px;top:-5px;width:10px;height:10px;border:1px solid var(--red);border-radius:50%;background:rgba(227,19,47,.3)}
+.lbl .dot::after{content:"";position:absolute;inset:-6px;border:1px solid rgba(227,19,47,.5);border-radius:50%;animation:ping 2.2s var(--ease) infinite}
+@keyframes ping{from{transform:scale(.4);opacity:1}to{transform:scale(1.6);opacity:0}}
+.lbl .ln{position:absolute;left:0;top:0;width:46px;height:1px;background:linear-gradient(90deg,var(--red),rgba(237,232,227,.7));transform-origin:0 0;transform:rotate(-38deg)}
+.lbl .tx{position:absolute;left:36px;top:-46px;white-space:nowrap;font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--bone);padding:5px 9px;background:rgba(10,8,8,.78);border:1px solid var(--line2);border-left:2px solid var(--red)}
+.lbl.l .ln{transform:rotate(-142deg)}
+.lbl.l .tx{left:auto;right:36px;border-left:1px solid var(--line2);border-right:2px solid var(--red)}
+
+/* ---------- loader ---------- */
+.loader{position:fixed;inset:0;z-index:100;background:var(--bg);display:grid;place-items:center;animation:ldOut .8s var(--ease) 1.25s forwards}
+@keyframes ldOut{to{opacity:0;visibility:hidden}}
+.ld-in{width:min(380px,78vw)}
+.ld-wm{font-family:var(--display);font-stretch:125%;font-weight:900;font-size:clamp(2.6rem,8vw,4.2rem);letter-spacing:-.03em;line-height:1}
+.ld-wm span{color:var(--red)}
+.ld-row{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin:20px 0 10px;font-variant-numeric:tabular-nums}
+.ld-bar{height:2px;background:var(--line)}
+.ld-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--red),var(--melt),var(--hot));transform-origin:left;transform:scaleX(0);animation:ldBar 1.15s var(--ease) forwards}
+@keyframes ldBar{to{transform:scaleX(1)}}
+
+
+/* ---------- build notice ---------- */
+.build-note{position:fixed;top:0;left:0;right:0;z-index:120;min-height:34px;display:flex;align-items:center;justify-content:center;padding:7px 52px;text-align:center;background:#e3132f;color:#fff;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
+.build-note strong{color:#fff}
+.build-note span{opacity:.9;font-weight:500}
+@media (max-width:640px){.build-note{padding:7px 14px;font-size:9px;line-height:1.35}.top{top:42px}}
+
+/* ---------- header ---------- */
+.top{position:fixed;top:34px;left:0;right:0;z-index:20;display:flex;align-items:center;gap:28px;padding:calc(env(safe-area-inset-top,0px) + 22px) calc(var(--gut) + 6px) 20px;transition:background .5s,padding .5s}
+.top.scrolled{background:linear-gradient(to bottom,rgba(10,8,8,.92),rgba(10,8,8,.55) 70%,rgba(10,8,8,0));padding-top:calc(env(safe-area-inset-top,0px) + 14px);padding-bottom:14px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--bone)}
+.brand svg{width:30px;height:30px;flex:none}
+.brand .wm{display:flex;flex-direction:column;gap:3px}
+.brand .wm b{font-family:var(--display);font-stretch:125%;font-weight:850;font-size:19px;letter-spacing:.01em;line-height:1}
+.brand .wm small{font-family:var(--mono);font-size:9px;letter-spacing:.34em;text-transform:uppercase;color:var(--mute);line-height:1}
+.nav{margin-left:auto;display:flex;gap:30px}
+.nav a{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);text-decoration:none;position:relative;padding:8px 0;transition:color .25s}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
+.nav a:hover,.nav a.on{color:var(--bone)}
+.nav a.on::after,.nav a:hover::after{transform:scaleX(1)}
+.menu-btn{display:none;margin-left:auto;background:none;border:1px solid var(--line2);color:var(--bone);font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;padding:10px 14px;cursor:pointer}
+.mnav{position:fixed;inset:0;z-index:19;background:rgba(10,8,8,.97);display:flex;flex-direction:column;justify-content:center;gap:6px;padding:90px var(--gut) 40px}
+.mnav a{font-family:var(--display);font-stretch:125%;font-weight:800;font-size:clamp(2rem,9vw,3rem);text-transform:uppercase;text-decoration:none;line-height:1.1;letter-spacing:-.02em}
+.mnav a:hover{color:var(--red)}
+.mnav p{margin-top:28px;font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--mute)}
+
+/* ---------- buttons ---------- */
+.btn{--cut:10px;display:inline-flex;align-items:center;gap:14px;font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;padding:16px 22px;border:1px solid var(--line2);color:var(--bone);background:rgba(10,8,8,.35);cursor:pointer;
+  clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,var(--cut) 100%,0 calc(100% - var(--cut)));transition:background .3s,border-color .3s,color .3s}
+.btn:hover{border-color:var(--bone);background:rgba(237,232,227,.06)}
+.btn svg{width:16px;height:16px;transition:transform .4s var(--ease)}
+.btn:hover svg{transform:translateX(4px)}
+.btn-red{background:var(--red);border-color:var(--red);color:#fff}
+.btn-red:hover{background:var(--red-hi);border-color:var(--red-hi)}
+.btn-sm{padding:11px 16px;font-size:11px}
+
+/* ---------- rail + telemetry ---------- */
+.rail{position:fixed;right:calc(var(--gut) - 30px);top:50%;transform:translateY(-58%);z-index:6}
+.rail ol{list-style:none;padding:0;display:flex;flex-direction:column;gap:9px;align-items:flex-end}
+.rail a{display:flex;align-items:center;gap:10px;color:var(--dim);text-decoration:none;font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;padding:2px 0}
+.rail a i{display:block;width:12px;height:1px;background:currentColor;transition:width .4s var(--ease),background .3s}
+.rail a span{opacity:0;transform:translateX(8px);transition:opacity .3s,transform .4s var(--ease);white-space:nowrap}
+.rail a:hover{color:var(--bone)}
+.rail a:hover span,.rail a.on span{opacity:1;transform:none}
+.rail a.on{color:var(--red)}
+.rail a.on i{width:30px}
+.rail a.past i{background:rgba(227,19,47,.55)}
+.tele{position:fixed;right:calc(var(--gut) + 4px);bottom:calc(env(safe-area-inset-bottom,0px) + 24px);z-index:6;pointer-events:none;width:252px;padding:12px 14px 13px;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);font-variant-numeric:tabular-nums;background:rgba(10,8,8,.6);border:1px solid var(--line);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.tele::before{content:"";position:absolute;left:-1px;top:-1px;width:12px;height:12px;border-left:2px solid var(--red);border-top:2px solid var(--red)}
+.tele .r{display:flex;justify-content:space-between;gap:16px;line-height:1.95}
+.tele b{font-weight:500;color:var(--bone)}
+.tele .ph b{color:var(--red);font-weight:700}
+.tele .bar{height:2px;background:var(--line);margin-top:9px;overflow:hidden}
+.tele .bar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--red),var(--melt));transform-origin:left;transform:scaleX(0)}
+.tele .hot b{color:var(--hot)}
+
+/* ---------- layout ---------- */
+main,footer{position:relative;z-index:2;overflow-x:clip}
+.wrap{width:100%;max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gut)}
+.col{max-width:min(46rem,52%)}
+.col-r{margin-left:auto}
+.eyebrow{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:11.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--mute)}
+.eyebrow::before{content:"";width:30px;height:1px;background:var(--red);flex:none}
+.h2{font-family:var(--display);font-stretch:122%;font-weight:800;font-size:clamp(2.3rem,5.2vw,5.3rem);line-height:.94;letter-spacing:-.035em;margin:22px 0 24px;text-wrap:balance}
+.h3{font-family:var(--display);font-stretch:118%;font-weight:750;font-size:clamp(1.6rem,2.5vw,2.35rem);line-height:1.02;letter-spacing:-.025em;text-wrap:balance}
+.lead{font-size:clamp(1.05rem,1.25vw,1.22rem);line-height:1.6;color:var(--bone2);max-width:40rem}
+.fine{font-size:13px;color:var(--mute);margin-top:18px;max-width:40rem}
+.panel{--cut:16px;position:relative;background:var(--panel);-webkit-backdrop-filter:blur(16px) saturate(1.15);backdrop-filter:blur(16px) saturate(1.15);border:1px solid var(--line);
+  clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,var(--cut) 100%,0 calc(100% - var(--cut)))}
+.panel::before{content:"";position:absolute;left:0;top:0;width:14px;height:14px;border-left:2px solid var(--red);border-top:2px solid var(--red)}
+.js .rv{opacity:.16;transform:translateY(28px);transition:opacity 1.1s var(--ease),transform 1.1s var(--ease)}
+.js .rv.in{opacity:1;transform:none}
+
+/* ---------- hero ---------- */
+.hero{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding-block:130px 64px;position:relative}
+.h-hero{font-family:var(--display);font-stretch:125%;font-weight:850;font-size:clamp(2.7rem,9.4vw,10.2rem);line-height:.84;letter-spacing:-.045em;text-transform:uppercase;margin:26px 0 34px}
+.h-hero .ln{display:block;overflow:hidden;padding:.02em 0 .06em;margin-bottom:-.06em}
+.h-hero .ln>span{display:block;animation:rise 1.15s var(--ease) both;animation-delay:calc(1.3s + var(--d,0s))}
+.h-hero .red{color:var(--red)}
+.h-hero sup{font-family:var(--mono);font-size:.1em;font-weight:500;letter-spacing:.1em;vertical-align:top;color:var(--bone2);margin-left:.6em;position:relative;top:.9em;text-transform:none}
+.rise{animation:fadeUp 1.1s var(--ease) both;animation-delay:calc(1.3s + var(--d,0s))}
+@keyframes rise{from{transform:translateY(108%)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}}
+.hero-foot{display:flex;flex-direction:column;align-items:flex-start;gap:30px}
+.hero-foot .lead{max-width:34rem}
+.ctas{display:flex;flex-wrap:wrap;gap:12px}
+.hero-stats{display:flex;flex-wrap:wrap;margin-top:52px;border-top:1px solid var(--line);max-width:60rem}
+.hero-stats>div{padding:16px 34px 0 0;margin-right:34px;border-right:1px solid var(--line)}
+.hero-stats>div:last-child{border-right:0}
+.hero-stats dt{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute)}
+.hero-stats dd{font-family:var(--display);font-stretch:115%;font-weight:700;font-size:clamp(1.4rem,2.2vw,2rem);line-height:1.2;font-variant-numeric:tabular-nums}
+.hero-stats small,.specs small{font-family:var(--mono);font-size:.42em;font-weight:500;letter-spacing:.1em;color:var(--mute);margin-left:.4em}
+.cue{position:absolute;left:var(--gut);bottom:22px;display:none}
+
+/* ---------- tape ---------- */
+.tape{position:relative;z-index:2;width:112%;margin:4vh 0 0 -6%;transform:rotate(-2.4deg);background:var(--red);color:#170507;overflow:hidden;box-shadow:0 30px 80px rgba(227,19,47,.28)}
+.tape-in{display:flex;width:max-content;animation:tape 44s linear infinite}
+.tape span{display:flex;align-items:center;font-family:var(--display);font-stretch:125%;font-weight:850;font-size:clamp(1.05rem,2.1vw,1.75rem);letter-spacing:-.01em;text-transform:uppercase;padding:15px 0;white-space:nowrap}
+.tape span::after{content:"";width:.9em;height:.62em;margin:0 1em;background:#170507;flex:none;
+  clip-path:polygon(0 40%,30% 40%,30% 0,46% 0,46% 40%,100% 40%,100% 60%,46% 60%,46% 100%,30% 100%,30% 60%,0 60%)}
+@keyframes tape{to{transform:translateX(-50%)}}
+
+/* ---------- manifest ---------- */
+.manifest{height:230vh;position:relative}
+.manifest .stick{position:sticky;top:0;height:100vh;height:100svh;display:flex;flex-direction:column;justify-content:center;gap:34px}
+.heat{font-family:var(--display);font-stretch:112%;font-weight:650;font-size:clamp(1.6rem,3.9vw,4rem);line-height:1.1;letter-spacing:-.025em;max-width:26ch;text-wrap:pretty}
+.heat .w{color:#3a3230;transition:none}
+.sig{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--mute)}
+
+/* ---------- machine ---------- */
+.machine{padding-block:22vh 18vh}
+.specs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:44px;border-top:1px solid var(--line2)}
+.specs>div{padding:16px 14px 18px 0;border-bottom:1px solid var(--line)}
+.specs dt{font-family:var(--mono);font-size:10px;letter-spacing:.17em;text-transform:uppercase;color:var(--mute)}
+.specs dd{margin-top:7px;font-family:var(--display);font-stretch:112%;font-weight:720;font-size:clamp(1.35rem,2.1vw,1.95rem);line-height:1;font-variant-numeric:tabular-nums;white-space:nowrap}
+.note{margin-top:34px;padding:26px 28px}
+.note-k{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin-bottom:10px}
+.note p:last-child{color:var(--bone2)}
+
+/* ---------- process ---------- */
+.proc-intro{padding-block:12vh 4vh}
+.step{position:relative;height:165vh}
+.step-stick{position:sticky;top:0;height:100vh;height:100svh;display:flex;align-items:center;z-index:0}
+.step-big{position:absolute;left:calc(var(--gut) - .05em);top:50%;transform:translateY(-66%);font-family:var(--display);font-stretch:125%;font-weight:900;font-size:clamp(9rem,27vw,27rem);line-height:.8;letter-spacing:-.06em;color:transparent;-webkit-text-stroke:1px rgba(227,19,47,.38);pointer-events:none;z-index:-1;user-select:none}
+.step-panel{width:100%;max-width:34rem;padding:30px 32px 0}
+.step-meta{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);margin-bottom:20px}
+.step-meta b{color:var(--red);font-weight:700}
+.step-meta i{flex:1;height:1px;background:var(--line2)}
+.step-panel p{margin-top:16px;color:var(--bone2)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;padding:0;list-style:none}
+.chips li{font-family:var(--mono);font-size:11px;letter-spacing:.06em;padding:7px 10px;border:1px solid var(--line2);color:var(--bone);background:rgba(237,232,227,.03)}
+.step-prog{height:2px;margin:26px -32px 0;background:var(--line)}
+.step-prog i{display:block;height:100%;background:linear-gradient(90deg,var(--red),var(--melt));transform-origin:left;transform:scaleX(var(--p,0))}
+
+/* ---------- services ---------- */
+.services{padding-block:24vh 16vh}
+.svc-list{margin-top:34px;border-bottom:1px solid var(--line)}
+.svc{position:relative;display:grid;grid-template-columns:minmax(0,15rem) minmax(0,1fr);gap:8px 28px;padding:24px 0 26px;border-top:1px solid var(--line)}
+.svc::before{content:"";position:absolute;left:0;top:-1px;height:1px;width:100%;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .7s var(--ease)}
+.svc:hover::before{transform:scaleX(1)}
+.svc h3{font-family:var(--display);font-stretch:112%;font-weight:720;font-size:1.28rem;line-height:1.15;letter-spacing:-.015em}
+.svc p{color:var(--bone2);font-size:16px}
+
+/* ---------- materials ---------- */
+.materials{padding-block:18vh 16vh}
+.col-wide{max-width:min(52rem,60%)}
+.mats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:34px}
+.mat{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-height:150px;padding:14px 14px 15px;background:rgba(13,10,10,.86);border:0;color:var(--bone);font:inherit;text-align:left;cursor:pointer;transition:background .35s,color .35s}
+.mat .t{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--mute);font-variant-numeric:tabular-nums}
+.mat .sym{font-family:var(--display);font-stretch:118%;font-weight:820;font-size:clamp(1.5rem,2.3vw,2.1rem);line-height:1;margin-top:auto;letter-spacing:-.02em}
+.mat .nm{font-size:13px;font-weight:600;line-height:1.25;margin-top:6px}
+.mat .tr{font-size:12.5px;line-height:1.35;color:var(--mute)}
+.mat .sw{position:absolute;top:13px;right:13px;width:12px;height:12px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+.mat:hover,.mat.on{background:var(--red);color:#fff}
+.mat:hover .t,.mat:hover .tr,.mat.on .t,.mat.on .tr{color:rgba(255,255,255,.82)}
+.hint-touch{display:none}
+@media (hover:none){.hint-fine{display:none}.hint-touch{display:inline}}
+
+/* ---------- workflow ---------- */
+.workflow{padding-block:22vh 18vh}
+.flow{list-style:none;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));margin-top:48px;position:relative;border-top:1px solid var(--line2)}
+.flow::before{content:"";position:absolute;left:0;top:-1px;height:1px;width:100%;background:var(--red);transform-origin:left;transform:scaleX(var(--p,0))}
+.flow li{position:relative;padding:34px 22px 0 0}
+.flow li::before{content:"";position:absolute;left:0;top:-6px;width:11px;height:11px;background:var(--bg);border:1px solid var(--line2);transition:background .4s,border-color .4s}
+.flow li.done::before{background:var(--red);border-color:var(--red)}
+.flow .n{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--red)}
+.flow h3{font-family:var(--display);font-stretch:115%;font-weight:720;font-size:1.3rem;line-height:1.1;margin:12px 0 10px;letter-spacing:-.015em}
+.flow p{font-size:15px;color:var(--bone2)}
+
+/* ---------- FAQ ---------- */
+.faq{padding-block:20vh 18vh}
+.qa{margin-top:30px;border-bottom:1px solid var(--line2)}
+.qa details{border-top:1px solid var(--line2)}
+.qa summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:flex-start;gap:24px;padding:22px 0;font-family:var(--display);font-stretch:108%;font-weight:640;font-size:1.2rem;line-height:1.3}
+.qa summary::-webkit-details-marker{display:none}
+.qa summary:hover{color:#fff}
+.x{position:relative;width:16px;height:16px;flex:none;margin-top:4px}
+.x::before,.x::after{content:"";position:absolute;background:var(--red);transition:transform .45s var(--ease)}
+.x::before{left:0;right:0;top:7px;height:2px}
+.x::after{top:0;bottom:0;left:7px;width:2px}
+details[open] .x::after{transform:scaleY(0)}
+.qa .a{padding:0 0 24px;color:var(--bone2);max-width:58ch}
+
+/* ---------- contact ---------- */
+.contact{padding-top:16vh}
+.c-top{min-height:84vh;display:flex;flex-direction:column;justify-content:center;max-width:min(54rem,56%)}
+.h-contact{font-family:var(--display);font-stretch:125%;font-weight:850;font-size:clamp(2.5rem,6.6vw,7rem);line-height:.88;letter-spacing:-.045em;text-transform:uppercase;margin:24px 0 28px;text-wrap:balance}
+.c-grid{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:clamp(28px,5vw,80px);align-items:start;padding-bottom:14vh}
+.direct .d-row{display:grid;grid-template-columns:6.5rem minmax(0,1fr) auto;align-items:baseline;gap:14px;padding:22px 0;border-top:1px solid var(--line2)}
+.direct .d-row:last-child{border-bottom:1px solid var(--line2)}
+.direct .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--mute)}
+.direct .v{font-family:var(--display);font-stretch:115%;font-weight:720;font-size:clamp(1.25rem,2.5vw,2.15rem);line-height:1.1;letter-spacing:-.02em;text-decoration:none;overflow-wrap:anywhere;user-select:all}
+.direct a.v:hover{color:var(--red)}
+.copy{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;background:none;border:1px solid var(--line2);color:var(--mute);padding:7px 10px;cursor:pointer;transition:color .2s,border-color .2s}
+.copy:hover{color:var(--bone);border-color:var(--bone)}
+.copy.ok{color:#fff;border-color:var(--red);background:var(--red)}
+.direct .aside{margin-top:24px;font-size:14.5px;color:var(--mute);max-width:30rem}
+.form{padding:30px 30px 28px}
+.f-head{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin-bottom:20px}
+.f-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 18px}
+.field{display:flex;flex-direction:column;gap:7px;min-width:0}
+.field.full{grid-column:1/-1}
+.field label{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute)}
+.field input,.field select,.field textarea{width:100%;font:inherit;font-size:16px;color:var(--bone);background:rgba(237,232,227,.035);border:1px solid var(--line2);border-radius:0;padding:12px 14px;outline:none;transition:border-color .2s,background .2s;-webkit-appearance:none;appearance:none}
+.field textarea{min-height:120px;resize:vertical}
+.field select{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%23e3132f' stroke-width='1.6'/></svg>");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px}
+.field select option{background:#140f0f;color:var(--bone)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--red);background:rgba(227,19,47,.06)}
+.field.bad input,.field.bad textarea{border-color:#ff5a6e}
+.field .err{font-size:12.5px;color:#ff7a8a;display:none}
+.field.bad .err{display:block}
+.f-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;margin-top:22px}
+.f-foot .fine{margin:0;max-width:22rem}
+.f-status{margin-top:18px;padding:14px 16px;border:1px solid var(--line2);border-left:2px solid var(--red);font-size:14.5px;color:var(--bone2)}
+
+/* ---------- footer ---------- */
+.foot{padding-top:18vh;background:linear-gradient(to bottom,rgba(10,8,8,0),var(--bg) 16vh)}
+.foot-wm{position:relative;font-family:var(--display);font-stretch:125%;font-weight:900;font-size:20.5vw;line-height:.8;letter-spacing:-.06em;text-align:center;color:transparent;-webkit-text-stroke:1px rgba(237,232,227,.2);white-space:nowrap;user-select:none;padding-bottom:.02em}
+.foot-wm::before,.foot-wm::after{content:"";position:absolute;background:var(--red);opacity:.85}
+.foot-wm::before{left:0;right:0;top:46%;height:2px}
+.foot-wm::after{top:0;bottom:0;left:33%;width:2px}
+.foot-row{display:flex;flex-wrap:wrap;gap:10px 30px;justify-content:space-between;padding-block:24px 34px;margin-top:2vh;border-top:1px solid var(--line);font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.foot-row a{text-decoration:none}
+.foot-row a:hover{color:var(--bone)}
+
+/* ---------- responsive ---------- */
+@media (max-width:1180px){
+  .nav{gap:20px}
+  .col{max-width:min(44rem,58%)}
+  .col-wide{max-width:min(50rem,66%)}
+  .mats{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .flow{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:40px}
+  .svc{grid-template-columns:1fr}
+}
+@media (max-width:960px){
+  .nav,.top .btn{display:none}
+  .menu-btn{display:inline-flex}
+  .rail{display:none}
+  #labels{display:none}
+  .col,.col-wide,.c-top{max-width:100%}
+  .c-grid{grid-template-columns:1fr}
+  .scrim-r{display:none}
+  .scrim-l{width:100%;opacity:1!important;background:linear-gradient(180deg,rgba(10,8,8,.25),rgba(10,8,8,.55))!important}
+  .tele{left:var(--gut);right:var(--gut);width:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);display:flex;flex-wrap:wrap;gap:0 18px;padding:9px 12px 10px}
+  .tele .r{line-height:1.6;gap:8px}
+  .tele .r.opt{display:none}
+  .tele .bar{flex-basis:100%;margin-top:6px}
+  .tele{transition:opacity .5s,transform .5s}
+  body.at-top .tele{opacity:0;transform:translateY(12px)}
+  .hero{padding-bottom:96px}
+  .step-panel{max-width:36rem}
+  .machine,.services,.materials,.workflow,.faq{padding-block:16vh 12vh}
+}
+@media (max-width:640px){
+  body{font-size:16px}
+  .specs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mat{min-height:136px}
+  .flow{grid-template-columns:1fr;row-gap:0;border-top:0;border-left:1px solid var(--line2);margin-left:5px}
+  .flow::before{top:0;left:-1px;width:1px;height:100%;transform:scaleY(var(--p,0));transform-origin:top}
+  .flow li{padding:0 0 30px 26px}
+  .flow li::before{left:-6px;top:4px}
+  .flow h3{margin-top:6px}
+  .hero-stats>div{padding-right:18px;margin-right:18px}
+  .hero-stats>div:nth-child(3){border-right:0}
+  .step{height:150vh}
+  .h-hero{font-size:10.2vw}
+  .h-hero sup{display:block;font-size:11px;top:0;margin:12px 0 0;letter-spacing:.14em;text-transform:uppercase}
+  .step-stick{align-items:flex-end;padding-bottom:84px}
+  .step-panel{padding:24px 22px 0}
+  .step-prog{margin:22px -22px 0}
+  .step-big{top:30%}
+  .direct .d-row{grid-template-columns:1fr auto;gap:6px 12px}
+  .direct .k{grid-column:1/-1}
+  .f-grid{grid-template-columns:1fr}
+  .form{padding:24px 20px}
+  .tape{margin-top:2vh}
+  .frame{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .loader{display:none}
+  .js .rv{opacity:1;transform:none}
+}
+</style>
+
 </head>
 <body>
-  <main>
-    <h1>Inject.dk</h1>
-    <p>Sprøjtestøbning • Produktudvikling • Produktion</p>
-  </main>
+<div class="build-note" role="status"><strong>Under opbygning</strong>&nbsp; <span>Inject.dk er under udvikling. Indhold, kapacitet og ydelser kan ændre sig frem mod lancering.</span></div>
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="ld-in">
+    <div class="ld-wm">INJECT<span>.</span></div>
+    <div class="ld-row"><span>Opvarmer cylinder</span><span id="ldT">24 °C</span></div>
+    <div class="ld-bar"><i></i></div>
+  </div>
+</div>
+
+<div class="bgfx" aria-hidden="true"></div>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="scrim scrim-l" aria-hidden="true"></div>
+<div class="scrim scrim-r" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<div id="labels" aria-hidden="true"></div>
+<div class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+<header class="top" id="top-bar">
+  <a class="brand" href="#top" aria-label="Inject Copenhagen – til toppen">
+    <svg viewBox="0 0 30 30" aria-hidden="true"><rect x="1" y="1" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M1 15.5h9" stroke="#e3132f" stroke-width="3"/><circle cx="17.5" cy="15.5" r="6.5" fill="#e3132f"/><circle cx="17.5" cy="15.5" r="2.1" fill="#0a0808"/></svg>
+    <span class="wm"><b>INJECT</b><small>Copenhagen</small></span>
+  </a>
+  <nav class="nav" aria-label="Hovedmenu">
+    <a href="#maskinen" data-nav="2">Maskinen</a>
+    <a href="#proces" data-nav="3-7">Processen</a>
+    <a href="#ydelser" data-nav="8">Ydelser</a>
+    <a href="#materialer" data-nav="9">Materialer</a>
+    <a href="#faq" data-nav="10-11">FAQ</a>
+  </nav>
+  <a class="btn btn-red btn-sm" href="#kontakt">Få et tilbud <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h13M9 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a>
+  <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="mnav">Menu</button>
+</header>
+
+<div class="mnav" id="mnav" hidden>
+  <a href="#maskinen">Maskinen</a>
+  <a href="#proces">Processen</a>
+  <a href="#ydelser">Ydelser</a>
+  <a href="#materialer">Materialer</a>
+  <a href="#faq">FAQ</a>
+  <a href="#kontakt" class="red">Kontakt</a>
+  <p>47 47 03 03 · contact@inject.dk</p>
+</div>
+
+<nav class="rail" id="rail" aria-label="Sektioner"><ol></ol></nav>
+
+<div class="tele" id="tele" aria-hidden="true">
+  <div class="r ph"><span>Fase</span><b id="tPh">Standby</b></div>
+  <div class="r opt"><span>Cyklus</span><b id="tT">T+ 0,00 s</b></div>
+  <div class="r" id="tCyR"><span>Cylinder</span><b id="tCy">24 °C</b></div>
+  <div class="r"><span>Tryk</span><b id="tP">0 bar</b></div>
+  <div class="r opt"><span>Lukkekraft</span><b id="tC">62,5 kN</b></div>
+  <div class="r opt"><span>Form</span><b id="tF">Lukket</b></div>
+  <div class="r opt" id="tER"><span>Emne</span><b id="tE">—</b></div>
+  <div class="bar"><i id="tBar"></i></div>
+</div>
+
+<main id="main">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero wrap" id="top" data-s="0" data-anchor="top" data-side="l" data-label="Start">
+    <p class="eyebrow rise" style="--d:0s">Sprøjtestøbning · København · Babyplast 6/12</p>
+    <h1 class="h-hero">
+      <span class="ln"><span style="--d:.05s">Små emner.</span></span>
+      <span class="ln"><span class="red" style="--d:.16s">Stort tryk.<sup>op til 2.035 bar</sup></span></span>
+    </h1>
+    <div class="hero-foot">
+      <p class="lead rise" style="--d:.32s">Inject Copenhagen sprøjtestøber præcisionsdele i termoplast – fra de første prototyper i rigtigt materiale til serier på titusindvis af emner. Hurtigt, skarpt og uden at værktøjet koster en formue.</p>
+      <div class="ctas rise" style="--d:.42s">
+        <a class="btn btn-red" href="#kontakt">Send din tegning <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h13M9 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a>
+        <a class="btn" href="#proces">Se et skud blive til</a>
+      </div>
+    </div>
+    <dl class="hero-stats rise" style="--d:.52s">
+      <div><dt>Maks. tryk</dt><dd>2.035<small>bar</small></dd></div>
+      <div><dt>Lukkekraft</dt><dd>62,5<small>kN</small></dd></div>
+      <div><dt>Tør cyklus</dt><dd>2,4<small>s</small></dd></div>
+      <div><dt>Maks. temperatur</dt><dd>420<small>°C</small></dd></div>
+    </dl>
+  </section>
+
+  <div class="tape" aria-hidden="true">
+    <div class="tape-in">
+      <span>Prototyper</span><span>Små serier</span><span>Mikrodele</span><span>Reservedele</span><span>2.035 bar</span><span>62,5 kN</span><span>Støbt i København</span>
+      <span>Prototyper</span><span>Små serier</span><span>Mikrodele</span><span>Reservedele</span><span>2.035 bar</span><span>62,5 kN</span><span>Støbt i København</span>
+    </div>
+  </div>
+
+  <!-- ============ MANIFEST ============ -->
+  <section class="manifest" id="hvorfor" data-s="1" data-side="c" data-label="Hvorfor">
+    <div class="stick wrap">
+      <p class="eyebrow">Hvorfor Inject</p>
+      <p class="heat" id="heat">Store sprøjtestøberier er bygget til millioner. Vi er bygget til alt det imellem: prototypen, nulserien, reservedelen og produktet, der skal i hænderne på rigtige kunder – før du binder dig til en stor og dyr produktionsform.</p>
+      <p class="sig">— Inject Copenhagen</p>
+    </div>
+  </section>
+
+  <!-- ============ MACHINE ============ -->
+  <section class="machine wrap" id="maskinen" data-s="2" data-side="l" data-label="Maskinen">
+    <div class="col">
+      <p class="eyebrow rv">Maskinen</p>
+      <h2 class="h2 rv">Babyplast <span class="red">6/12</span></h2>
+      <p class="lead rv">En italiensk præcisionsmaskine, bygget til små emner. Den fylder under en kvadratmeter, bruger omkring 2 kW i drift og doserer med stempel i stedet for snegl – så selv meget små skud bliver ens, gang på gang.</p>
+      <dl class="specs rv">
+        <div><dt>Lukkekraft</dt><dd><span data-count="62.5" data-dec="1">62,5</span><small>kN</small></dd></div>
+        <div><dt>Indsprøjtningstryk</dt><dd><span data-count="2035" data-dec="0">2.035</span><small>bar</small></dd></div>
+        <div><dt>Skudvolumen</dt><dd>4–15<small>cm³</small></dd></div>
+        <div><dt>Stempel</dt><dd>Ø10–18<small>mm</small></dd></div>
+        <div><dt>Formindsats</dt><dd>75×75<small>mm</small></dd></div>
+        <div><dt>Åbningsslag</dt><dd><span data-count="110" data-dec="0">110</span><small>mm</small></dd></div>
+        <div><dt>Tør cyklus</dt><dd><span data-count="2.4" data-dec="1">2,4</span><small>s</small></dd></div>
+        <div><dt>Varmezoner</dt><dd>4 + 1</dd></div>
+        <div><dt>Maks. temperatur</dt><dd><span data-count="420" data-dec="0">420</span><small>°C</small></dd></div>
+        <div><dt>Installeret effekt</dt><dd><span data-count="3" data-dec="0">3</span><small>kW</small></dd></div>
+        <div><dt>Støjniveau</dt><dd>&lt; 70<small>dB</small></dd></div>
+        <div><dt>Gulvareal</dt><dd>&lt; 1<small>m²</small></dd></div>
+      </dl>
+      <aside class="note panel rv">
+        <p class="note-k">Hvorfor det betyder noget for dig</p>
+        <p>Maskinens plader fungerer som formramme. Vi skal derfor kun fremstille selve formindsatserne på 75 × 75 mm – ikke en komplet form. Det gør værktøjet markant billigere og hurtigere at lave end til en traditionel sprøjtestøbemaskine.</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ PROCESS ============ -->
+  <section class="process" id="proces" aria-labelledby="proc-h">
+    <div class="wrap proc-intro">
+      <div class="col">
+        <p class="eyebrow rv">Processen</p>
+        <h2 class="h2 rv" id="proc-h">Ét skud.<br>Fem faser.</h2>
+        <p class="lead rv">Baggrunden er en rigtig sprøjtestøbningscyklus, sat ned i tempo. Scroll frem og tilbage – maskinen følger med.</p>
+      </div>
+    </div>
+
+    <article class="step" id="granulat" data-s="3" data-side="l" data-label="Granulat">
+      <div class="step-stick wrap">
+        <span class="step-big" aria-hidden="true">01</span>
+        <div class="step-panel panel">
+          <div class="step-meta"><b>01</b><span>/ 05</span><i></i><span>Granulat</span></div>
+          <h3 class="h3">Korn for korn.</h3>
+          <p>Alt starter som plastgranulat: små korn af termoplast, ofte tilsat farve som masterbatch. Kornene tørres efter behov og falder fra tragten ned i maskinens plastificeringsenhed.</p>
+          <ul class="chips"><li>Korn ≈ 3 mm</li><li>Tørring efter behov</li><li>Farve via masterbatch</li></ul>
+          <div class="step-prog"><i></i></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="step" id="plastificering" data-s="4" data-side="l" data-label="Smeltning">
+      <div class="step-stick wrap">
+        <span class="step-big" aria-hidden="true">02</span>
+        <div class="step-panel panel">
+          <div class="step-meta"><b>02</b><span>/ 05</span><i></i><span>Smeltning</span></div>
+          <h3 class="h3">Fire zoner. Én smelte.</h3>
+          <p>Fire varmezoner smelter granulatet til en homogen masse. Hver zone styres for sig, så materialet får præcis den temperatur, det skal have – op til 420 °C for krævende materialer som PEEK.</p>
+          <ul class="chips"><li>4 PID-zoner</li><li>Op til 420 °C</li><li>Homogen smelte</li></ul>
+          <div class="step-prog"><i></i></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="step" id="injektion" data-s="5" data-side="l" data-label="Injektion">
+      <div class="step-stick wrap">
+        <span class="step-big" aria-hidden="true">03</span>
+        <div class="step-panel panel">
+          <div class="step-meta"><b>03</b><span>/ 05</span><i></i><span>Injektion</span></div>
+          <h3 class="h3">Op til 2.035 bar – på et splitsekund.</h3>
+          <p>Et stempel – ikke en snegl – presser smelten ind i formens hulrum. Stempelprincippet doserer selv meget små skud præcist, så hvert emne bliver fyldt helt ud – til yderst i tandspidserne.</p>
+          <ul class="chips"><li>Stempel Ø10–18 mm</li><li>Op til 15 cm³</li><li>Op til 2.035 bar</li></ul>
+          <div class="step-prog"><i></i></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="step" id="koeling" data-s="6" data-side="l" data-label="Køling">
+      <div class="step-stick wrap">
+        <span class="step-big" aria-hidden="true">04</span>
+        <div class="step-panel panel">
+          <div class="step-meta"><b>04</b><span>/ 05</span><i></i><span>Køling</span></div>
+          <h3 class="h3">Tryk, tid og tålmodighed.</h3>
+          <p>Formen holdes lukket med 62,5 kN, mens eftertrykket fylder op og emnet størkner. Køletiden er ofte kun få sekunder, men den afgør mål, overflade og indre spændinger – så den bliver indstillet omhyggeligt.</p>
+          <ul class="chips"><li>62,5 kN lukkekraft</li><li>Eftertryk</li><li>Styret køletid</li></ul>
+          <div class="step-prog"><i></i></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="step" id="udstoedning" data-s="7" data-side="l" data-label="Udstødning">
+      <div class="step-stick wrap">
+        <span class="step-big" aria-hidden="true">05</span>
+        <div class="step-panel panel">
+          <div class="step-meta"><b>05</b><span>/ 05</span><i></i><span>Udstødning</span></div>
+          <h3 class="h3">Formen åbner. Emnet er klar.</h3>
+          <p>Formen åbner, udstøderne skubber skuddet fri, og næste cyklus går i gang. Tilbage står emnerne – klar til afgratning, kontrol og pakning.</p>
+          <ul class="chips"><li>Åbningsslag 110 mm</li><li>Tør cyklus 2,4 s</li><li>Næste skud</li></ul>
+          <div class="step-prog"><i></i></div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============ SERVICES ============ -->
+  <section class="services wrap" id="ydelser" data-s="8" data-side="l" data-label="Ydelser">
+    <div class="col">
+      <p class="eyebrow rv">Ydelser</p>
+      <h2 class="h2 rv">Vi støber det, de store springer over.</h2>
+      <div class="svc-list">
+        <article class="svc rv"><h3>Prototyper i rigtigt materiale</h3><p>Test pasform, funktion og holdbarhed i det materiale, produktet skal laves i – ikke i en 3D-printet tilnærmelse.</p></article>
+        <article class="svc rv"><h3>Små og mellemstore serier</h3><p>Fra nogle hundrede til titusindvis af emner. Lille værktøj og lav timepris gør de små serier rentable.</p></article>
+        <article class="svc rv"><h3>Mikro- og præcisionsdele</h3><p>Tandhjul, clips, bøsninger, låse, tætninger og små huse – emner, hvor tiendedele af en millimeter betyder noget.</p></article>
+        <article class="svc rv"><h3>Design for produktion</h3><p>Vi gennemgår dit emne for slip, godstykkelser, indløb og udstødning, så det kan støbes stabilt første gang.</p></article>
+        <article class="svc rv"><h3>Værktøj og formindsatser</h3><p>Vi står for formindsatserne til maskinens standardramme. Det holder både pris og leveringstid nede.</p></article>
+        <article class="svc rv"><h3>Reservedele og udgåede emner</h3><p>Mangler du en lille plastdel, der ikke kan købes længere? Vi kan genskabe den ud fra en tegning, en skanning eller den gamle del.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MATERIALS ============ -->
+  <section class="materials wrap" id="materialer" data-s="9" data-side="l" data-label="Materialer">
+    <div class="col col-wide">
+      <p class="eyebrow rv">Materialer</p>
+      <h2 class="h2 rv">Vælg dit materiale.</h2>
+      <p class="lead rv">Babyplast 6/12 forarbejder stort set alle termoplaster – fra hverdagsplast som PP til højtydende PEEK. <span class="hint-fine">Hold musen over et materiale</span><span class="hint-touch">Tryk på et materiale</span>, og se tandhjulene skifte.</p>
+      <div class="mats rv" id="mats">
+        <button class="mat" type="button" data-mat="PP" aria-pressed="false"><i class="sw" style="background:#e9e4d6"></i><span class="t">200–260 °C</span><span class="sym">PP</span><span class="nm">Polypropylen</span><span class="tr">Sejt, let og kemikaliebestandigt</span></button>
+        <button class="mat" type="button" data-mat="PE" aria-pressed="false"><i class="sw" style="background:#f1eee6"></i><span class="t">180–260 °C</span><span class="sym">PE</span><span class="nm">Polyethylen</span><span class="tr">Fleksibelt og fugtbestandigt</span></button>
+        <button class="mat" type="button" data-mat="ABS" aria-pressed="false"><i class="sw" style="background:#ece2c9"></i><span class="t">220–260 °C</span><span class="sym">ABS</span><span class="nm">Akrylnitril-butadien-styren</span><span class="tr">Stift, slagfast, flot overflade</span></button>
+        <button class="mat" type="button" data-mat="PA" aria-pressed="false"><i class="sw" style="background:#e4d8bb"></i><span class="t">240–290 °C</span><span class="sym">PA</span><span class="nm">Polyamid (nylon)</span><span class="tr">Stærkt og slidstærkt</span></button>
+        <button class="mat" type="button" data-mat="POM" aria-pressed="false"><i class="sw" style="background:#f6f4ee"></i><span class="t">190–220 °C</span><span class="sym">POM</span><span class="nm">Acetal</span><span class="tr">Lav friktion – født til tandhjul</span></button>
+        <button class="mat" type="button" data-mat="PC" aria-pressed="false"><i class="sw" style="background:#bfd9e6"></i><span class="t">280–320 °C</span><span class="sym">PC</span><span class="nm">Polycarbonat</span><span class="tr">Glasklart og næsten ubrydeligt</span></button>
+        <button class="mat" type="button" data-mat="PMMA" aria-pressed="false"><i class="sw" style="background:#d9f0f2"></i><span class="t">220–260 °C</span><span class="sym">PMMA</span><span class="nm">Akryl</span><span class="tr">Krystalklart og UV-stabilt</span></button>
+        <button class="mat" type="button" data-mat="PS" aria-pressed="false"><i class="sw" style="background:#f2f2f2"></i><span class="t">180–240 °C</span><span class="sym">PS</span><span class="nm">Polystyren</span><span class="tr">Billigt og formstabilt</span></button>
+        <button class="mat" type="button" data-mat="TPE" aria-pressed="false"><i class="sw" style="background:#1d1d1f"></i><span class="t">180–230 °C</span><span class="sym">TPE</span><span class="nm">Termoplastisk elastomer</span><span class="tr">Gummiagtigt, blødt greb</span></button>
+        <button class="mat" type="button" data-mat="PBT" aria-pressed="false"><i class="sw" style="background:#2c2c2e"></i><span class="t">240–270 °C</span><span class="sym">PBT</span><span class="nm">Polybutylentereftalat</span><span class="tr">Til elektronik og stik</span></button>
+        <button class="mat" type="button" data-mat="PCABS" aria-pressed="false"><i class="sw" style="background:#3a3b3e"></i><span class="t">240–280 °C</span><span class="sym">PC/ABS</span><span class="nm">Blanding</span><span class="tr">Sejhed og overflade i ét</span></button>
+        <button class="mat" type="button" data-mat="PEEK" aria-pressed="false"><i class="sw" style="background:#c9ab7c"></i><span class="t">360–400 °C</span><span class="sym">PEEK</span><span class="nm">Polyetheretherketon</span><span class="tr">Højtydende og varmebestandigt</span></button>
+      </div>
+      <p class="fine rv">Temperaturerne er typiske massetemperaturer og afhænger af den konkrete type. Vi farver efter ønske med masterbatch og hjælper gerne med det endelige materialevalg.</p>
+    </div>
+  </section>
+
+  <!-- ============ WORKFLOW ============ -->
+  <section class="workflow wrap" id="forloeb" data-s="10" data-side="c" data-label="Forløb">
+    <p class="eyebrow rv">Forløbet</p>
+    <h2 class="h2 rv">Fra fil til færdige emner.</h2>
+    <ol class="flow" id="flow">
+      <li><span class="n">01</span><h3>Send filen</h3><p>STEP, IGES eller STL – eller bare en skitse og et par mål.</p></li>
+      <li><span class="n">02</span><h3>Tilbud</h3><p>Du får en konkret pris på værktøj og stykpris – og vi siger det ærligt, hvis noget bør ændres.</p></li>
+      <li><span class="n">03</span><h3>Værktøj</h3><p>Formindsatserne fremstilles til maskinens standardramme.</p></li>
+      <li><span class="n">04</span><h3>Prøveemner</h3><p>Du får de første emner i hånden og godkender dem, før serien starter.</p></li>
+      <li><span class="n">05</span><h3>Produktion</h3><p>Serien støbes, kontrolleres og pakkes.</p></li>
+      <li><span class="n">06</span><h3>Levering</h3><p>Afhentning i København eller forsendelse til hele landet.</p></li>
+    </ol>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="faq wrap" id="faq" data-s="11" data-side="r" data-label="FAQ">
+    <div class="col col-r">
+      <p class="eyebrow rv">FAQ</p>
+      <h2 class="h2 rv">Godt at vide.</h2>
+      <div class="qa rv">
+        <details open>
+          <summary>Hvor store emner kan I støbe?<span class="x" aria-hidden="true"></span></summary>
+          <div class="a">Babyplast 6/12 er bygget til små emner. Et skud kan være op til ca. 15 cm³ inklusive indløb, og formindsatserne måler 75 × 75 mm. I praksis betyder det emner fra brøkdele af et gram op til omkring 10–12 gram.</div>
+        </details>
+        <details>
+          <summary>Hvad koster en form?<span class="x" aria-hidden="true"></span></summary>
+          <div class="a">Det afhænger af emnets geometri og antallet af kaviteter. Fordi maskinen bruger små, standardiserede formindsatser, er værktøjet typisk væsentligt billigere end til en traditionel sprøjtestøbemaskine. Send en tegning, så regner vi på det.</div>
+        </details>
+        <details>
+          <summary>Hvor mange emner skal jeg bestille?<span class="x" aria-hidden="true"></span></summary>
+          <div class="a">Vi er skabt til små og mellemstore serier – fra en håndfuld prøveemner til titusindvis af stk. Fortæl os dit behov, så finder vi den mest økonomiske løsning.</div>
+        </details>
+        <details>
+          <summary>Hvilke filer skal I bruge?<span class="x" aria-hidden="true"></span></summary>
+          <div class="a">Helst en 3D-fil i STEP-format (.stp/.step). IGES, STL og Parasolid virker også – og har du kun en skitse eller en gammel del, tager vi udgangspunkt i den.</div>
+        </details>
+        <details>
+          <summary>Kan I hjælpe med at tilpasse mit design?<span class="x" aria-hidden="true"></span></summary>
+          <div class="a">Ja. Vi gennemgår emnet for slip, godstykkelser, indløb og udstødning og foreslår ændringer, der gør det billigere og mere stabilt at producere.</div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section class="contact wrap" id="kontakt" data-s="12" data-anchor="top" data-side="l" data-label="Kontakt">
+    <div class="c-top">
+      <p class="eyebrow rv">Kontakt</p>
+      <h2 class="h-contact rv">Send tegningen.<br><span class="red">Vi klarer trykket.</span></h2>
+      <p class="lead rv">Fortæl os om dit emne, så vender vi tilbage med en vurdering og en pris.</p>
+    </div>
+    <div class="c-grid">
+      <div class="direct rv">
+        <div class="d-row"><span class="k">Telefon</span><a class="v" href="tel:+4547470303">47 47 03 03</a><button class="copy" type="button" data-copy="+45 47 47 03 03">Kopiér</button></div>
+        <div class="d-row"><span class="k">E-mail</span><a class="v" href="mailto:contact@inject.dk">contact@inject.dk</a><button class="copy" type="button" data-copy="contact@inject.dk">Kopiér</button></div>
+        <div class="d-row"><span class="k">CVR</span><span class="v">46414772<small style="display:block;margin-top:6px;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)">En del af JC Stål ApS</small></span><button class="copy" type="button" data-copy="46414772">Kopiér</button></div>
+        <p class="aside">Inject Copenhagen · Sprøjtestøbning af præcisionsdele i termoplast på Babyplast 6/12.</p>
+      </div>
+      <form class="form panel rv" id="form" novalidate>
+        <p class="f-head">Forespørgsel</p>
+        <div class="f-grid">
+          <div class="field"><label for="f-name">Navn *</label><input id="f-name" name="name" autocomplete="name" required><span class="err">Skriv dit navn.</span></div>
+          <div class="field"><label for="f-company">Virksomhed</label><input id="f-company" name="company" autocomplete="organization"></div>
+          <div class="field"><label for="f-email">E-mail *</label><input id="f-email" name="email" type="email" autocomplete="email" required><span class="err">Skriv en gyldig e-mailadresse.</span></div>
+          <div class="field"><label for="f-phone">Telefon</label><input id="f-phone" name="phone" type="tel" autocomplete="tel"></div>
+          <div class="field"><label for="f-qty">Antal emner</label>
+            <select id="f-qty" name="qty"><option>Ved ikke endnu</option><option>Prototyper (1–100)</option><option>100–1.000</option><option>1.000–10.000</option><option>10.000+</option></select></div>
+          <div class="field"><label for="f-mat">Materiale</label>
+            <select id="f-mat" name="mat"><option>Ved ikke endnu</option><option>PP</option><option>PE</option><option>ABS</option><option>PA (nylon)</option><option>POM</option><option>PC</option><option>PMMA</option><option>PS</option><option>TPE</option><option>PBT</option><option>PC/ABS</option><option>PEEK</option><option>Andet</option></select></div>
+          <div class="field full"><label for="f-msg">Beskriv dit emne *</label><textarea id="f-msg" name="msg" placeholder="Fx størrelse, funktion, krav til overflade og tolerancer, deadline …" required></textarea><span class="err">Fortæl kort om emnet.</span></div>
+        </div>
+        <div class="f-foot">
+          <p class="fine">Formularen åbner din mailklient med beskeden udfyldt – vedhæft din tegning i mailen.</p>
+          <button class="btn btn-red" type="submit">Send forespørgsel <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h13M9 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+        </div>
+        <p class="f-status" id="f-status" hidden></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="foot-wm" aria-hidden="true">INJECT</div>
+  <div class="foot-row wrap">
+    <span>Inject Copenhagen</span>
+    <span>CVR 46414772<br><small style="letter-spacing:.1em;text-transform:none">En del af JC Stål ApS</small></span>
+    <a href="tel:+4547470303">Tlf. 47 47 03 03</a>
+    <a href="mailto:contact@inject.dk">contact@inject.dk</a>
+    <span>55°40′N 12°34′E</span>
+    <span>© 2026</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var root = document.documentElement;
+  root.classList.add('js');
+  try { root.lang = 'da'; } catch (e) {}
+
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var clamp01 = function (x) { return x < 0 ? 0 : x > 1 ? 1 : x; };
+  var seg = function (s, a, b) { return clamp01((s - a) / (b - a)); };
+  var lerp = function (a, b, t) { return a + (b - a) * t; };
+  var sm = function (t) { return t * t * (3 - 2 * t); };
+  var eout = function (t) { return 1 - Math.pow(1 - t, 3); };
+
+  /* One shared timeline (scene time "s"): section N is centred at s = N. */
+  var TL = {
+    hopA: 2.3, hopB: 3.6, heatA: 3.3, heatB: 4.3,
+    injA: 4.5, injB: 5.35, coolA: 5.5, coolB: 6.45,
+    openA: 6.55, openB: 7.0, ejA: 7.0, ejB: 7.15, flyA: 7.15, flyB: 7.8,
+    degA: 7.85, degB: 8.45, depA: 9.4, depB: 10.0, closeA: 9.6, closeB: 10.2,
+    flagA: 10.85, flagB: 12.0
+  };
+  var S = window.__INJ = { s: 0, target: 0, TL: TL, mat: 'red', reduced: reduced, ptr: { x: 0, y: 0 }, ready: false };
+
+  /* ---------- telemetry model (shared with the 3D scene) ---------- */
+  function tele(s) {
+    var heat = sm(seg(s, TL.heatA, TL.heatB));
+    var cyl = 24 + (232 - 24) * heat;
+    var p = 0;
+    if (s >= TL.injA && s < TL.injB) {
+      var u = seg(s, TL.injA, TL.injB);
+      p = 1480 * eout(Math.min(1, (s - TL.injA) / 0.14)) + 170 * u * u;
+    } else if (s >= TL.injB && s < TL.coolA + 0.35) {
+      p = lerp(1650, 680, sm(seg(s, TL.injB, TL.injB + 0.14)));
+    } else if (s >= TL.coolA + 0.35 && s < TL.coolA + 0.75) {
+      p = lerp(680, 0, sm(seg(s, TL.coolA + 0.35, TL.coolA + 0.75)));
+    }
+    var open = seg(s, TL.openA, TL.openB) * (1 - seg(s, TL.closeA, TL.closeB));
+    var clampF = 62.5 * (1 - sm(clamp01(open / 0.14)));
+    var fe = seg(s, TL.injA + 0.05, TL.injB - 0.1);
+    var fill = Math.min(1, (fe < 0.5 ? 4 * fe * fe * fe : 1 - Math.pow(-2 * fe + 2, 3) / 2) * 1.9 / 1.87);
+    var part = s < TL.injA + 0.05 || s > TL.depB ? null : lerp(232, 42, sm(seg(s, TL.coolA, TL.coolB)));
+    var cyc = seg(s, 2.3, 7.8) * 8.4;
+    var ph;
+    if (s < 2.3) ph = 'Standby';
+    else if (s < 3.55) ph = 'Dosering';
+    else if (s < 4.5) ph = 'Plastificering';
+    else if (s < 5.42) ph = 'Injektion';
+    else if (s < 6.5) ph = 'Eftertryk · køling';
+    else if (s < 7.8) ph = 'Udstødning';
+    else if (s < 9.6) ph = 'Emne klar';
+    else ph = 'Næste cyklus';
+    return { heat: heat, cyl: cyl, p: p, clampF: clampF, open: open, fill: fill, part: part, cyc: cyc, ph: ph };
+  }
+  S.tele = tele;
+
+  var nf0 = new Intl.NumberFormat('da-DK', { maximumFractionDigits: 0 });
+  var nf1 = new Intl.NumberFormat('da-DK', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  var nf2 = new Intl.NumberFormat('da-DK', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  S.nf = { nf0: nf0, nf1: nf1, nf2: nf2 };
+
+  /* ---------- sections -> scroll anchors ---------- */
+  var sections = Array.prototype.slice.call(document.querySelectorAll('[data-s]'));
+  var anchors = [];
+  function measure() {
+    var vh = window.innerHeight;
+    var max = Math.max(1, document.documentElement.scrollHeight - vh);
+    anchors = sections.map(function (el) {
+      var r = el.getBoundingClientRect();
+      var top = r.top + window.scrollY;
+      var a = el.dataset.anchor === 'top' ? top : top + r.height / 2 - vh / 2;
+      return { a: Math.max(0, Math.min(max, a)), s: +el.dataset.s, el: el };
+    }).sort(function (x, y) { return x.s - y.s; });
+    for (var i = 1; i < anchors.length; i++) if (anchors[i].a <= anchors[i - 1].a) anchors[i].a = anchors[i - 1].a + 1;
+  }
+  function sFromScroll(y) {
+    if (!anchors.length) return 0;
+    if (y <= anchors[0].a) return anchors[0].s;
+    for (var i = 1; i < anchors.length; i++) {
+      if (y <= anchors[i].a) {
+        var A = anchors[i - 1], B = anchors[i];
+        return A.s + (B.s - A.s) * (y - A.a) / (B.a - A.a);
+      }
+    }
+    return anchors[anchors.length - 1].s;
+  }
+
+  /* ---------- rail ---------- */
+  var railOl = document.querySelector('#rail ol');
+  var railLinks = [];
+  sections.forEach(function (el) {
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.href = '#' + el.id;
+    a.innerHTML = '<span>' + (el.dataset.label || el.id) + '</span><i></i>';
+    a.setAttribute('aria-label', el.dataset.label || el.id);
+    li.appendChild(a);
+    railOl.appendChild(li);
+    railLinks.push({ a: a, s: +el.dataset.s });
+  });
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav a[data-nav]')).map(function (a) {
+    var r = a.dataset.nav.split('-').map(Number);
+    return { a: a, lo: r[0], hi: r.length > 1 ? r[1] : r[0] };
+  });
+
+  /* ---------- manifest: words heat up, then cool to bone ---------- */
+  var heatEl = document.getElementById('heat');
+  var words = [];
+  if (heatEl) {
+    var txt = heatEl.textContent.trim().split(/\s+/);
+    heatEl.textContent = '';
+    txt.forEach(function (w, i) {
+      var sp = document.createElement('span');
+      sp.className = 'w';
+      sp.textContent = w;
+      heatEl.appendChild(sp);
+      if (i < txt.length - 1) heatEl.appendChild(document.createTextNode(' '));
+      words.push(sp);
+    });
+  }
+  var manifest = document.getElementById('hvorfor');
+  var COLD = [58, 50, 48], HOT = [255, 112, 38], BONE = [237, 232, 227];
+  function mix3(a, b, t) { return [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)]; }
+  var lastHeatP = -1;
+  function updateHeat() {
+    if (!manifest || !words.length) return;
+    var r = manifest.getBoundingClientRect();
+    var vh = window.innerHeight;
+    if (r.bottom < -50 || r.top > vh + 50) return;
+    var p = clamp01((-r.top + vh * 0.15) / Math.max(1, r.height - vh * 0.9));
+    if (reduced) p = 1;
+    if (Math.abs(p - lastHeatP) < 0.0008) return;
+    lastHeatP = p;
+    var n = words.length, span = 5;
+    for (var i = 0; i < n; i++) {
+      var w = clamp01((p * (n + span) - i) / span);
+      var t1 = sm(clamp01(w / 0.3)), t2 = sm(clamp01((w - 0.3) / 0.7));
+      var c = mix3(mix3(COLD, HOT, t1), BONE, t2);
+      var g = t1 * (1 - t2);
+      words[i].style.color = 'rgb(' + (c[0] | 0) + ',' + (c[1] | 0) + ',' + (c[2] | 0) + ')';
+      words[i].style.textShadow = g > 0.02 ? '0 0 ' + (18 * g).toFixed(1) + 'px rgba(255,90,20,' + (0.75 * g).toFixed(2) + ')' : 'none';
+    }
+  }
+
+  /* ---------- telemetry HUD ---------- */
+  var $ = function (id) { return document.getElementById(id); };
+  var tPh = $('tPh'), tT = $('tT'), tCy = $('tCy'), tP = $('tP'), tC = $('tC'), tF = $('tF'), tE = $('tE'), tBar = $('tBar'), tCyR = $('tCyR'), tER = $('tER');
+  var cache = {};
+  function set(el, key, v) { if (cache[key] !== v) { cache[key] = v; el.textContent = v; } }
+  function updateTele(s) {
+    var d = tele(s);
+    set(tPh, 'ph', d.ph);
+    set(tT, 't', 'T+ ' + nf2.format(d.cyc) + ' s');
+    set(tCy, 'cy', nf0.format(d.cyl) + ' °C');
+    set(tP, 'p', nf0.format(Math.round(d.p / 10) * 10) + ' bar');
+    set(tC, 'c', nf1.format(d.clampF) + ' kN');
+    set(tF, 'f', d.open < 0.01 ? 'Lukket' : d.open > 0.99 ? 'Åben · 110 mm' : nf0.format(d.open * 110) + ' mm');
+    set(tE, 'e', d.part == null ? '—' : nf0.format(d.part) + ' °C');
+    tCyR.classList.toggle('hot', d.heat > 0.6);
+    tER.classList.toggle('hot', d.part != null && d.part > 120);
+    tBar.style.transform = 'scaleX(' + (d.cyc / 8.4).toFixed(4) + ')';
+  }
+
+  /* ---------- step progress + workflow line ---------- */
+  var steps = Array.prototype.slice.call(document.querySelectorAll('.step')).map(function (el) {
+    return { el: el.querySelector('.step-prog i'), s: +el.dataset.s };
+  });
+  var flow = document.getElementById('flow');
+  var flowItems = flow ? Array.prototype.slice.call(flow.children) : [];
+  function updateFlow() {
+    if (!flow) return;
+    var r = flow.getBoundingClientRect(), vh = window.innerHeight;
+    if (r.bottom < -100 || r.top > vh + 100) return;
+    var p = clamp01((vh * 0.8 - r.top) / (r.height + vh * 0.25));
+    flow.style.setProperty('--p', p.toFixed(3));
+    flowItems.forEach(function (li, i) { li.classList.toggle('done', p >= i / flowItems.length + 0.02); });
+  }
+
+  /* ---------- main loop ---------- */
+  var body = document.body;
+  var topBar = document.getElementById('top-bar');
+  var lastT = performance.now();
+  var lastActive = -1;
+  function tick(now) {
+    var dt = Math.min(0.1, (now - lastT) / 1000);
+    lastT = now;
+    S.target = sFromScroll(window.scrollY);
+    var k = reduced ? 1 : 1 - Math.exp(-dt * 5.2);
+    S.s += (S.target - S.s) * k;
+    if (Math.abs(S.target - S.s) < 0.0004) S.s = S.target;
+    var s = S.s;
+
+    updateTele(s);
+    updateHeat();
+    updateFlow();
+    steps.forEach(function (st) { if (st.el) st.el.style.transform = 'scaleX(' + seg(s, st.s - 0.5, st.s + 0.5).toFixed(4) + ')'; });
+
+    var active = Math.max(0, Math.min(anchors.length - 1, Math.round(S.target)));
+    if (active !== lastActive && anchors[active]) {
+      lastActive = active;
+      body.dataset.side = anchors[active].el.dataset.side || 'l';
+      railLinks.forEach(function (r) { r.a.classList.toggle('on', r.s === active); r.a.classList.toggle('past', r.s < active); });
+      navLinks.forEach(function (n) { n.a.classList.toggle('on', active >= n.lo && active <= n.hi); });
+    }
+    topBar.classList.toggle('scrolled', window.scrollY > 40);
+    body.classList.toggle('at-top', S.target < 0.45);
+    requestAnimationFrame(tick);
+  }
+
+  /* ---------- reveal + count-up ---------- */
+  var counted = new WeakSet();
+  function countUp(el) {
+    if (counted.has(el)) return;
+    counted.add(el);
+    var to = parseFloat(el.dataset.count), dec = +el.dataset.dec || 0;
+    var fmt = dec ? nf1 : nf0;
+    if (reduced) { el.textContent = fmt.format(to); return; }
+    var t0 = performance.now(), dur = 1300;
+    (function step(now) {
+      var u = clamp01((now - t0) / dur);
+      el.textContent = fmt.format(to * eout(u));
+      if (u < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('in');
+        Array.prototype.forEach.call(e.target.querySelectorAll('[data-count]'), countUp);
+        io.unobserve(e.target);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
+  } else {
+    document.querySelectorAll('.rv').forEach(function (el) { el.classList.add('in'); });
+  }
+
+  /* ---------- materials -> 3D ---------- */
+  var mats = Array.prototype.slice.call(document.querySelectorAll('.mat'));
+  function pick(key) {
+    S.mat = key;
+    mats.forEach(function (m) { var on = m.dataset.mat === key; m.classList.toggle('on', on); m.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+  }
+  mats.forEach(function (m) {
+    m.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') pick(m.dataset.mat); });
+    m.addEventListener('focus', function () { pick(m.dataset.mat); });
+    m.addEventListener('click', function () { pick(m.dataset.mat); });
+  });
+
+  /* ---------- pointer parallax ---------- */
+  window.addEventListener('pointermove', function (e) {
+    S.ptr.x = (e.clientX / window.innerWidth) * 2 - 1;
+    S.ptr.y = (e.clientY / window.innerHeight) * 2 - 1;
+  }, { passive: true });
+
+  /* ---------- mobile menu ---------- */
+  var menuBtn = document.getElementById('menuBtn'), mnav = document.getElementById('mnav');
+  function setMenu(open) {
+    mnav.hidden = !open;
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.textContent = open ? 'Luk' : 'Menu';
+  }
+  menuBtn.addEventListener('click', function () { setMenu(mnav.hidden); });
+  mnav.addEventListener('click', function (e) { if (e.target.closest('a')) setMenu(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !mnav.hidden) setMenu(false); });
+
+  /* ---------- copy buttons ---------- */
+  document.querySelectorAll('.copy').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var v = b.dataset.copy;
+      var done = function () { b.textContent = 'Kopieret'; b.classList.add('ok'); setTimeout(function () { b.textContent = 'Kopiér'; b.classList.remove('ok'); }, 1800); };
+      var fallback = function () {
+        var t = b.parentNode.querySelector('.v');
+        var sel = window.getSelection(), rng = document.createRange();
+        rng.selectNodeContents(t); sel.removeAllRanges(); sel.addRange(rng);
+        b.textContent = 'Markeret';
+        setTimeout(function () { b.textContent = 'Kopiér'; }, 1800);
+      };
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(v).then(done, fallback);
+        else fallback();
+      } catch (e) { fallback(); }
+    });
+  });
+
+  /* ---------- form -> prefilled e-mail ---------- */
+  var form = document.getElementById('form');
+  if (form) {
+    var status = document.getElementById('f-status');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var f = form.elements;
+      var ok = true;
+      var check = function (el, valid) { el.closest('.field').classList.toggle('bad', !valid); if (!valid && ok) { el.focus(); } ok = ok && valid; };
+      check(f.name, f.name.value.trim().length > 1);
+      check(f.email, /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email.value.trim()));
+      check(f.msg, f.msg.value.trim().length > 4);
+      if (!ok) return;
+      var subject = 'Forespørgsel fra ' + f.name.value.trim() + (f.company.value.trim() ? ' (' + f.company.value.trim() + ')' : '');
+      var bodyTxt = 'Navn: ' + f.name.value.trim() +
+        '\nVirksomhed: ' + (f.company.value.trim() || '–') +
+        '\nE-mail: ' + f.email.value.trim() +
+        '\nTelefon: ' + (f.phone.value.trim() || '–') +
+        '\nAntal emner: ' + f.qty.value +
+        '\nMateriale: ' + f.mat.value +
+        '\n\n' + f.msg.value.trim() +
+        '\n\n(Husk at vedhæfte din tegning)';
+      status.hidden = false;
+      status.innerHTML = 'Din mailklient burde nu åbne med forespørgslen udfyldt. Sker der ikke noget, så skriv direkte til <b>contact@inject.dk</b> eller ring på <b>47 47 03 03</b> – og husk at vedhæfte din tegning.';
+      try { window.location.href = 'mailto:contact@inject.dk?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(bodyTxt); } catch (err) {}
+    });
+    form.addEventListener('input', function (e) { var fl = e.target.closest('.field'); if (fl) fl.classList.remove('bad'); });
+  }
+
+  /* ---------- loader counter ---------- */
+  var ldT = document.getElementById('ldT');
+  if (ldT && !reduced) {
+    var l0 = performance.now();
+    (function lstep(now) {
+      var u = clamp01((now - l0) / 1150);
+      ldT.textContent = nf0.format(24 + 206 * eout(u)) + ' °C';
+      if (u < 1) requestAnimationFrame(lstep);
+    })(l0);
+  }
+
+  /* ---------- boot ---------- */
+  measure();
+  S.s = S.target = sFromScroll(window.scrollY);
+  window.addEventListener('resize', function () { measure(); }, { passive: true });
+  window.addEventListener('load', measure);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+  if ('ResizeObserver' in window) new ResizeObserver(function () { measure(); }).observe(document.getElementById('main'));
+  requestAnimationFrame(tick);
+})();
+
+</script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const S = window.__INJ;
+const TL = S.TL;
+const clamp01 = (x) => (x < 0 ? 0 : x > 1 ? 1 : x);
+const seg = (s, a, b) => clamp01((s - a) / (b - a));
+const lerp = (a, b, t) => a + (b - a) * t;
+const eio = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+const sm5 = (t) => t * t * t * (t * (t * 6 - 15) + 10);
+
+let seed = 20260923;
+const rnd = () => { seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+const gauss = () => (rnd() + rnd() + rnd() + rnd() - 2) / 2;
+
+/* ================= renderer ================= */
+const canvas = document.getElementById('gl');
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance', stencil: false });
+} catch (err) {
+  document.documentElement.classList.add('no-gl');
+  canvas.style.display = 'none';
+  throw err;
+}
+canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); canvas.style.opacity = '0'; });
+const coarse = matchMedia('(pointer: coarse)').matches;
+let DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+renderer.setPixelRatio(DPR);
+renderer.setSize(innerWidth, innerHeight, false);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 0.92;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.setClearColor(0x0a0808, 1);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a0808);
+scene.fog = new THREE.FogExp2(0x0a0808, 0.024);
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environmentIntensity = 0.32;
+
+const camera = new THREE.PerspectiveCamera(32, innerWidth / innerHeight, 0.1, 240);
+camera.position.set(9, 3.5, 14);
+
+const rt = new THREE.WebGLRenderTarget(4, 4, { type: THREE.HalfFloatType, samples: coarse ? 0 : DPR > 1.25 ? 2 : 4 });
+const composer = new EffectComposer(renderer, rt);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.6, 0.5, 1.05);
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
+/* ================= lights ================= */
+scene.add(new THREE.HemisphereLight(0x8d93a0, 0x2a0b0e, 0.3));
+const key = new THREE.DirectionalLight(0xfff1e8, 1.45);
+key.position.set(5, 10, 8);
+scene.add(key);
+const fillL = new THREE.DirectionalLight(0x9fb2ff, 0.35);
+fillL.position.set(-8, 3, 6);
+scene.add(fillL);
+const rimA = new THREE.PointLight(0xff1b36, 110, 42, 2);
+rimA.position.set(-8, 4.5, -6);
+scene.add(rimA);
+const rimB = new THREE.PointLight(0xff2a40, 80, 36, 2);
+rimB.position.set(12, 3.5, -5);
+scene.add(rimB);
+const meltL = new THREE.PointLight(0xff6a1a, 0, 7, 2);
+meltL.position.set(0.2, 0.3, 1.1);
+scene.add(meltL);
+const barrelL = new THREE.PointLight(0xff4a14, 0, 6, 2);
+barrelL.position.set(3.6, 1.0, 1.2);
+scene.add(barrelL);
+
+/* ================= materials ================= */
+const M = {
+  paint: new THREE.MeshPhysicalMaterial({ color: 0x8c0b19, metalness: 0.25, roughness: 0.42, clearcoat: 0.55, clearcoatRoughness: 0.22 }),
+  dark: new THREE.MeshStandardMaterial({ color: 0x1c1a1b, metalness: 0.65, roughness: 0.45 }),
+  steel: new THREE.MeshStandardMaterial({ color: 0x80868d, metalness: 1, roughness: 0.3 }),
+  chrome: new THREE.MeshStandardMaterial({ color: 0x959ba2, metalness: 1, roughness: 0.24 }),
+  ghost: new THREE.MeshPhysicalMaterial({ color: 0x39414a, metalness: 0.9, roughness: 0.16, transparent: true, opacity: 0.14, depthWrite: false, side: THREE.DoubleSide }),
+  barrel: new THREE.MeshPhysicalMaterial({ color: 0x6d757d, metalness: 1, roughness: 0.22, transparent: true, opacity: 0.3, depthWrite: false, side: THREE.DoubleSide }),
+  glass: new THREE.MeshPhysicalMaterial({ color: 0xffffff, metalness: 0, roughness: 0.04, clearcoat: 1, transparent: true, opacity: 0.13, depthWrite: false, side: THREE.DoubleSide }),
+  edgeW: new THREE.LineBasicMaterial({ color: 0xede8e3, transparent: true, opacity: 0.34 }),
+  edgeF: new THREE.LineBasicMaterial({ color: 0xede8e3, transparent: true, opacity: 0.1 }),
+  edgeR: new THREE.LineBasicMaterial({ color: 0xff3048, transparent: true, opacity: 0.55 }),
+  rubber: new THREE.MeshStandardMaterial({ color: 0x121212, metalness: 0, roughness: 0.7 }),
+};
+M.paintX = M.paint.clone();
+M.paintX.transparent = true;
+
+const mesh = (geo, mat, x = 0, y = 0, z = 0) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); return m; };
+const edges = (m, mat, thr = 20) => { m.add(new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry, thr), mat)); return m; };
+const cylX = (r1, r2, len, segs = 40, open = false) => { const g = new THREE.CylinderGeometry(r1, r2, len, segs, 1, open); g.rotateZ(-Math.PI / 2); return g; };
+const ringX = (r, tube) => { const g = new THREE.TorusGeometry(r, tube, 10, 64); g.rotateY(Math.PI / 2); return g; };
+
+/* ================= machine ================= */
+const machine = new THREE.Group();
+scene.add(machine);
+
+// base cabinet
+machine.add(edges(mesh(new THREE.BoxGeometry(14.6, 1.05, 2.7), M.paint, 2.0, -2.075, 0), M.edgeF));
+machine.add(mesh(new THREE.BoxGeometry(14.4, 0.06, 2.5), M.dark, 2.0, -1.525, 0));
+for (const x of [-5.0, 9.0]) for (const z of [-1.1, 1.1]) machine.add(mesh(new THREE.CylinderGeometry(0.16, 0.2, 0.12, 20), M.dark, x, -2.66, z));
+for (let i = 0; i < 9; i++) machine.add(mesh(new THREE.BoxGeometry(0.07, 0.5, 0.02), M.dark, 5.4 + i * 0.32, -2.1, 1.355));
+for (const x of [-1.9, 3.3]) machine.add(mesh(new THREE.BoxGeometry(0.02, 0.98, 0.01), M.dark, x, -2.075, 1.356));
+
+// name plate
+{
+  const c = document.createElement('canvas'); c.width = 512; c.height = 128;
+  const g = c.getContext('2d');
+  g.fillStyle = '#131012'; g.fillRect(0, 0, 512, 128);
+  g.fillStyle = '#e3132f'; g.fillRect(0, 0, 14, 128);
+  g.fillStyle = '#ede8e3'; g.font = '800 46px Arial Black, Arial, sans-serif'; g.textBaseline = 'middle';
+  g.fillText('INJECT', 40, 54);
+  g.fillStyle = '#a39893'; g.font = '500 20px monospace'; g.fillText('COPENHAGEN  ·  6/12', 42, 98);
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 4;
+  machine.add(mesh(new THREE.PlaneGeometry(1.5, 0.375), new THREE.MeshStandardMaterial({ map: tex, roughness: 0.4, metalness: 0.2 }), -3.4, -2.02, 1.357));
+}
+
+// platens
+const fixedPlaten = edges(mesh(new THREE.BoxGeometry(0.45, 3.1, 3.0), M.paint, 1.125, -0.02, 0), M.edgeF);
+const movingPlaten = edges(mesh(new THREE.BoxGeometry(0.45, 3.1, 3.0), M.paintX, -1.125, -0.02, 0), M.edgeW);
+const rearPlaten = edges(mesh(new THREE.BoxGeometry(0.5, 3.1, 3.0), M.paint, -4.65, -0.02, 0), M.edgeF);
+machine.add(fixedPlaten, movingPlaten, rearPlaten);
+
+// tie bars + hex nuts
+for (const y of [-1.25, 1.25]) for (const z of [-1.25, 1.25]) {
+  machine.add(mesh(cylX(0.085, 0.085, 7.0, 24), M.chrome, -1.6, y, z));
+  for (const x of [1.42, -4.96]) machine.add(mesh(cylX(0.15, 0.15, 0.14, 6), M.dark, x, y, z));
+}
+
+// clamp cylinder + rod
+machine.add(mesh(cylX(0.52, 0.52, 1.0, 48), M.paint, -3.9, 0, 0));
+machine.add(mesh(cylX(0.58, 0.58, 0.1, 48), M.dark, -3.42, 0, 0));
+machine.add(mesh(cylX(0.58, 0.58, 0.1, 48), M.dark, -4.38, 0, 0));
+const clampRod = mesh(cylX(0.17, 0.17, 1, 28), M.chrome);
+machine.add(clampRod);
+
+// mould halves (x-ray)
+const moldGeo = new THREE.BoxGeometry(0.9, 2.2, 2.2);
+const fixedHalf = edges(mesh(moldGeo, M.ghost, 0.45, 0, 0), M.edgeW);
+const movingHalf = edges(mesh(moldGeo, M.ghost, -0.45, 0, 0), M.edgeW);
+machine.add(fixedHalf, movingHalf);
+for (const y of [-0.85, 0.85]) for (const z of [-0.85, 0.85]) movingHalf.add(mesh(cylX(0.055, 0.055, 0.5, 16), M.chrome, 0.45 + 0.2, y, z));
+// sprue bushing
+fixedHalf.add(mesh(cylX(0.16, 0.16, 0.3, 24), M.steel, 0.3, 0, 0));
+
+// nozzle
+machine.add(mesh(cylX(0.2, 0.07, 1.0, 32), M.steel, 1.4, 0, 0));
+const nozGlowMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(3.2, 0.9, 0.25), transparent: true, opacity: 0, depthWrite: false });
+machine.add(mesh(new THREE.SphereGeometry(0.085, 16, 12), nozGlowMat, 0.93, 0, 0));
+
+// barrel
+machine.add(mesh(cylX(0.36, 0.36, 5.0, 56), M.barrel, 4.4, 0, 0));
+machine.add(mesh(ringX(0.36, 0.03), M.steel, 1.9, 0, 0));
+machine.add(mesh(ringX(0.36, 0.03), M.steel, 6.9, 0, 0));
+const heaterMats = [];
+for (let k = 0; k < 4; k++) {
+  const x = 2.35 + k * 0.8;
+  const hm = new THREE.MeshStandardMaterial({ color: 0x2e2622, metalness: 0.75, roughness: 0.38, emissive: 0xff3a12, emissiveIntensity: 0 });
+  heaterMats.push(hm);
+  machine.add(mesh(cylX(0.44, 0.44, 0.5, 56), hm, x, 0, 0));
+  machine.add(mesh(ringX(0.445, 0.024), M.steel, x - 0.25, 0, 0));
+  machine.add(mesh(ringX(0.445, 0.024), M.steel, x + 0.25, 0, 0));
+  machine.add(mesh(new THREE.BoxGeometry(0.2, 0.1, 0.16), M.steel, x, 0.47, 0));
+  machine.add(mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.22, 8), M.rubber, x, 0.6, 0));
+}
+const meltBarrelMat = new THREE.MeshStandardMaterial({ color: 0x5a0a10, roughness: 0.35, metalness: 0, emissive: 0xff4812, emissiveIntensity: 0 });
+const meltBarrel = mesh(cylX(0.27, 0.27, 1, 32), meltBarrelMat);
+machine.add(meltBarrel);
+const plunger = mesh(cylX(0.262, 0.262, 1, 32), M.chrome);
+const plungerHead = mesh(cylX(0.27, 0.27, 0.08, 32), M.dark);
+machine.add(plunger, plungerHead);
+
+// injection cylinder + supports + hoses
+machine.add(mesh(cylX(0.52, 0.52, 1.5, 48), M.paint, 8.05, 0, 0));
+machine.add(mesh(cylX(0.58, 0.58, 0.1, 48), M.dark, 7.32, 0, 0));
+machine.add(mesh(cylX(0.58, 0.58, 0.1, 48), M.dark, 8.78, 0, 0));
+machine.add(mesh(new THREE.BoxGeometry(0.5, 1.05, 0.55), M.dark, 8.05, -1.03, 0));
+machine.add(mesh(new THREE.BoxGeometry(0.4, 1.2, 0.5), M.dark, 6.35, -0.96, 0));
+for (const [x0, z0] of [[8.5, 0.3], [7.6, -0.3]]) {
+  const curve = new THREE.CatmullRomCurve3([new THREE.Vector3(x0, 0.45, z0), new THREE.Vector3(x0 + 0.5, 0.9, z0 * 2), new THREE.Vector3(x0 + 1.0, 0.2, z0 * 3), new THREE.Vector3(x0 + 0.9, -1.5, z0 * 2.5)]);
+  machine.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 40, 0.05, 10, false), M.rubber));
+}
+
+// feed throat + hopper
+machine.add(mesh(new THREE.BoxGeometry(0.62, 0.42, 0.62), M.paint, 5.45, 0.52, 0));
+machine.add(mesh(new THREE.CylinderGeometry(0.17, 0.17, 0.35, 24), M.steel, 5.45, 0.9, 0));
+const hopper = mesh(new THREE.CylinderGeometry(0.85, 0.17, 1.25, 56, 1, true), M.glass, 5.45, 1.7, 0);
+hopper.add(new THREE.LineSegments(new THREE.EdgesGeometry(hopper.geometry, 30), M.edgeW));
+machine.add(hopper);
+{ const g = new THREE.TorusGeometry(0.85, 0.035, 10, 72); g.rotateX(Math.PI / 2); machine.add(mesh(g, M.paint, 5.45, 2.325, 0)); }
+
+// HMI touch screen on arm
+const hmiC = document.createElement('canvas'); hmiC.width = 512; hmiC.height = 320;
+const hx = hmiC.getContext('2d');
+const hmiTex = new THREE.CanvasTexture(hmiC); hmiTex.colorSpace = THREE.SRGBColorSpace; hmiTex.anisotropy = 4;
+machine.add(mesh(new THREE.CylinderGeometry(0.05, 0.05, 2.95, 12), M.dark, 2.55, -0.08, 1.62));
+const screenBody = mesh(new THREE.BoxGeometry(1.05, 0.7, 0.07), M.dark, 2.55, 1.55, 1.68);
+screenBody.rotation.y = 0.3;
+screenBody.add(mesh(new THREE.PlaneGeometry(0.97, 0.62), new THREE.MeshBasicMaterial({ map: hmiTex, color: new THREE.Color(1.15, 1.15, 1.15) }), 0, 0, 0.037));
+machine.add(screenBody);
+
+/* ================= floor ================= */
+{
+  const ground = mesh(new THREE.PlaneGeometry(160, 160), new THREE.MeshStandardMaterial({ color: 0x0e0c0c, roughness: 0.78, metalness: 0.25 }), 0, -2.72, 0);
+  ground.rotation.x = -Math.PI / 2;
+  scene.add(ground);
+  const grid = new THREE.GridHelper(160, 160, 0x4a141c, 0x1f1718);
+  grid.position.y = -2.714;
+  grid.material.transparent = true; grid.material.opacity = 0.55; grid.material.depthWrite = false;
+  scene.add(grid);
+  const stripMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(2.4, 0.12, 0.2) });
+  const sx = mesh(new THREE.PlaneGeometry(160, 0.06), stripMat, 0, -2.708, 3.2); sx.rotation.x = -Math.PI / 2; scene.add(sx);
+  const sz = mesh(new THREE.PlaneGeometry(0.06, 160), stripMat, -7.4, -2.708, 0); sz.rotation.x = -Math.PI / 2; scene.add(sz);
+  const c = document.createElement('canvas'); c.width = c.height = 256;
+  const g = c.getContext('2d');
+  const gr = g.createRadialGradient(128, 128, 10, 128, 128, 128);
+  gr.addColorStop(0, 'rgba(0,0,0,.85)'); gr.addColorStop(0.6, 'rgba(0,0,0,.45)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
+  g.fillStyle = gr; g.fillRect(0, 0, 256, 256);
+  const blob = mesh(new THREE.PlaneGeometry(19, 6), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), transparent: true, depthWrite: false }), 2, -2.704, 0);
+  blob.rotation.x = -Math.PI / 2;
+  scene.add(blob);
+}
+
+/* ================= the shot: sprue, runners, 4 gears ================= */
+const SPR = 0.9, RG = 0.62, NT = 12, RP = 0.3, MOD = 0.05, RO = RP + MOD, RUN = RG - RO;
+const U = { uFill: { value: 0 }, uHeat: { value: 1 }, uFront: { value: 0.16 } };
+function meltMaterial(extra) {
+  const m = new THREE.MeshPhysicalMaterial(Object.assign({ color: 0xc8102e, roughness: 0.3, metalness: 0, clearcoat: 0.85, clearcoatRoughness: 0.16 }, extra));
+  m.onBeforeCompile = (sh) => {
+    sh.uniforms.uFill = U.uFill; sh.uniforms.uHeat = U.uHeat; sh.uniforms.uFront = U.uFront;
+    sh.vertexShader = sh.vertexShader
+      .replace('#include <common>', '#include <common>\nattribute float aFlow;\nvarying float vFlow;')
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\n\tvFlow = aFlow;');
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <common>', '#include <common>\nvarying float vFlow;\nuniform float uFill;\nuniform float uHeat;\nuniform float uFront;')
+      .replace('#include <clipping_planes_fragment>', '#include <clipping_planes_fragment>\n\tif ( vFlow > uFill ) discard;\n\tfloat fFront = 1.0 - smoothstep( 0.0, uFront, uFill - vFlow );\n\tfloat fHeat = clamp( uHeat + fFront * 0.75, 0.0, 1.75 );\n\tdiffuseColor.rgb *= 1.0 - 0.8 * clamp( fHeat, 0.0, 1.0 );')
+      .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\n\tvec3 hotC = mix( vec3( 0.7, 0.05, 0.01 ), vec3( 1.0, 0.4, 0.07 ), smoothstep( 0.25, 0.95, fHeat ) );\n\thotC = mix( hotC, vec3( 1.0, 0.85, 0.55 ), smoothstep( 1.0, 1.65, fHeat ) );\n\ttotalEmissiveRadiance += hotC * fHeat * 1.75;');
+  };
+  return m;
+}
+function setFlow(geo, fn) {
+  const p = geo.attributes.position; const a = new Float32Array(p.count);
+  for (let i = 0; i < p.count; i++) a[i] = fn(p.getX(i), p.getY(i), p.getZ(i));
+  geo.setAttribute('aFlow', new THREE.BufferAttribute(a, 1));
+}
+function gearShape(N, rp, m, holeR) {
+  const ro = rp + m, rr = rp - 1.25 * m, pa = (Math.PI * 2) / N, hr = pa * 0.29, ht = pa * 0.13;
+  const sh = new THREE.Shape();
+  let first = true;
+  const P = (r, a) => { const x = Math.cos(a) * r, y = Math.sin(a) * r; if (first) { sh.moveTo(x, y); first = false; } else sh.lineTo(x, y); };
+  for (let k = 0; k < N; k++) {
+    const c = k * pa;
+    P(rr, c - pa / 2); P(rr, c - hr); P(ro * 0.975, c - ht * 1.15); P(ro, c - ht * 0.45); P(ro, c + ht * 0.45); P(ro * 0.975, c + ht * 1.15); P(rr, c + hr);
+  }
+  sh.closePath();
+  const hole = new THREE.Path(); hole.absarc(0, 0, holeR, 0, Math.PI * 2, true); sh.holes.push(hole);
+  for (let k = 0; k < 4; k++) { const a = k * Math.PI / 2 + Math.PI / 4; const h = new THREE.Path(); h.absarc(Math.cos(a) * 0.158, Math.sin(a) * 0.158, 0.034, 0, Math.PI * 2, true); sh.holes.push(h); }
+  return sh;
+}
+const shotMat = meltMaterial();
+const runMat = meltMaterial({ transparent: true });
+const shot = new THREE.Group();
+shot.visible = false;
+scene.add(shot);
+const tree = new THREE.Group();
+shot.add(tree);
+{
+  const g = new THREE.CylinderGeometry(0.1, 0.055, SPR, 20, 6); g.rotateX(Math.PI / 2); g.translate(0, 0, SPR / 2);
+  setFlow(g, (x, y, z) => SPR - z);
+  tree.add(new THREE.Mesh(g, runMat));
+  const f = new THREE.SphereGeometry(0.085, 18, 12);
+  setFlow(f, (x, y) => SPR + Math.hypot(x, y) * 0.5);
+  tree.add(new THREE.Mesh(f, runMat));
+}
+const DIRS = [[0, -1], [1, 0], [0, 1], [-1, 0]];
+DIRS.forEach(([dx, dy]) => {
+  const L = RUN + 0.05;
+  const g = new THREE.CylinderGeometry(0.045, 0.05, L, 12, 4);
+  g.rotateZ(Math.atan2(dy, dx) - Math.PI / 2);
+  g.translate((dx * L) / 2, (dy * L) / 2, 0);
+  setFlow(g, (x, y) => SPR + Math.max(0, x * dx + y * dy));
+  tree.add(new THREE.Mesh(g, runMat));
+});
+const gShape = gearShape(NT, RP, MOD, 0.075);
+const gGeo = new THREE.ExtrudeGeometry(gShape, { depth: 0.14, bevelEnabled: true, bevelThickness: 0.014, bevelSize: 0.01, bevelSegments: 2, curveSegments: 10 });
+gGeo.translate(0, 0, -0.07);
+const PLUS = DIRS.map(([dx, dy]) => [dx * RG, dy * RG]);
+const SQ = [[-RP, -RP], [RP, -RP], [RP, RP], [-RP, RP]];
+const SGN = [1, -1, 1, -1];
+const OFF = [0, Math.PI / NT, 0, Math.PI / NT];
+const gears = DIRS.map(([dx, dy], k) => {
+  const g = gGeo.clone();
+  const gx = -dx * RO, gy = -dy * RO;
+  setFlow(g, (x, y, z) => SPR + RUN + Math.hypot(x - gx, y - gy) + Math.abs(z) * 0.2);
+  const m = new THREE.Mesh(g, shotMat);
+  m.position.set(PLUS[k][0], PLUS[k][1], 0);
+  m.rotation.z = OFF[k];
+  shot.add(m);
+  return m;
+});
+
+// cavity engraving on both mould faces
+{
+  const outline = gShape.getPoints(2);
+  const pts = [];
+  PLUS.forEach(([cx, cy]) => {
+    for (let i = 0; i < outline.length; i++) {
+      const a = outline[i], b = outline[(i + 1) % outline.length];
+      pts.push(0, cy + a.y, -(cx + a.x), 0, cy + b.y, -(cx + b.x));
+    }
+  });
+  DIRS.forEach(([dx, dy]) => { pts.push(0, 0, 0, 0, dy * RUN, -dx * RUN); });
+  const base = new Float32Array(pts);
+  const mk = (xoff) => { const arr = base.slice(); for (let i = 0; i < arr.length; i += 3) arr[i] = xoff; const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(arr, 3)); return new THREE.LineSegments(g, M.edgeR); };
+  fixedHalf.add(mk(-0.448));
+  movingHalf.add(mk(0.448));
+  const sg = new THREE.BufferGeometry(); sg.setAttribute('position', new THREE.BufferAttribute(new Float32Array([-0.45, 0, 0, 0.45, 0, 0]), 3));
+  fixedHalf.add(new THREE.LineSegments(sg, M.edgeR));
+}
+
+/* ================= granulate ================= */
+const COLS = 37, ROWS = 28, NP = COLS * ROWS;
+const pGeo = new THREE.CylinderGeometry(0.058, 0.058, 0.078, 14, 1);
+const pMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.3, metalness: 0, clearcoat: 0.6, clearcoatRoughness: 0.2 });
+const pellets = new THREE.InstancedMesh(pGeo, pMat, NP);
+pellets.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+pellets.frustumCulled = false;
+scene.add(pellets);
+const cRed = new THREE.Color(0xc8102e), cWhite = new THREE.Color(0xf3eee8);
+const isWhite = (col, row) => (col >= 12 && col <= 15) || (row >= 12 && row <= 15);
+const CAMS_EARLY = [[10.5, 4.2, 17.5], [2.5, 10.5, 12.5], [-6.5, 4.5, 16.5], [10.4, 5.0, 7.0]];
+const P = { base: [], ph: new Float32Array(NP * 3), axis: [], spd: new Float32Array(NP), hS: new Float32Array(NP), cH: [], mouth: [], fS: new Float32Array(NP), cF: [] };
+const THROAT = new THREE.Vector3(5.45, 1.12, 0);
+const FC = new THREE.Vector3(-1.0, 2.35, 4.2), FSP = 0.132;
+for (let i = 0; i < NP; i++) {
+  let x, y, z;
+  for (let tries = 0; tries < 200; tries++) {
+    x = 2 + gauss() * 11; y = 1.4 + gauss() * 4.2; z = -2.5 + gauss() * 8; if (z > 6) continue;
+    if (y < -2.3) continue;
+    if (x > -5.9 && x < 9.9 && y < 2.9 && Math.abs(z) < 2.1) continue;
+    let near = false;
+    for (const c of CAMS_EARLY) if ((x - c[0]) ** 2 + (y - c[1]) ** 2 + (z - c[2]) ** 2 < 30) near = true;
+    if (!near) break;
+  }
+  P.base.push(new THREE.Vector3(x, y, z));
+  P.ph[i * 3] = rnd() * 6.28; P.ph[i * 3 + 1] = rnd() * 6.28; P.ph[i * 3 + 2] = rnd() * 6.28;
+  P.axis.push(new THREE.Vector3(rnd() - 0.5, rnd() - 0.5, rnd() - 0.5).normalize());
+  P.spd[i] = 0.3 + rnd() * 0.9;
+  P.hS[i] = TL.hopA + rnd() * 0.72;
+  P.cH.push(new THREE.Vector3(5.45 + gauss() * 1.6, 4.6 + rnd() * 1.6, gauss() * 1.6));
+  const r = Math.sqrt(rnd()) * 0.6, a = rnd() * 6.283;
+  P.mouth.push(new THREE.Vector3(5.45 + Math.cos(a) * r, 2.4, Math.sin(a) * r));
+  const col = i % COLS, row = (i / COLS) | 0;
+  P.fS[i] = TL.flagA + (col / (COLS - 1)) * 0.5 + rnd() * 0.12;
+  const fx = FC.x + (col - (COLS - 1) / 2) * FSP, fy = FC.y + ((ROWS - 1) / 2 - row) * FSP;
+  P.cF.push(new THREE.Vector3((x + fx) / 2 + gauss() * 1.5, Math.max(y, fy) + 2 + rnd() * 2.5, (z + FC.z) / 2 + 1.5 + rnd() * 2));
+  pellets.setColorAt(i, isWhite(col, row) ? cWhite : cRed);
+}
+pellets.instanceColor.needsUpdate = true;
+
+// granulate resting in the hopper
+const NPILE = 170;
+const pile = new THREE.InstancedMesh(pGeo, pMat, NPILE);
+pile.frustumCulled = false;
+scene.add(pile);
+const pileM = [];
+{
+  const d = new THREE.Object3D();
+  for (let i = 0; i < NPILE; i++) {
+    const f = i / NPILE;
+    const y = 1.1 + Math.pow(f, 0.8) * 0.62;
+    const rMax = (0.17 + ((y - 1.075) / 1.25) * 0.68) * 0.82;
+    const r = Math.sqrt(rnd()) * rMax, a = rnd() * 6.283;
+    d.position.set(5.45 + Math.cos(a) * r, y, Math.sin(a) * r);
+    d.rotation.set(rnd() * 3, rnd() * 3, rnd() * 3);
+    d.updateMatrix();
+    pileM.push(d.matrix.clone());
+    pile.setColorAt(i, rnd() < 0.24 ? cWhite : cRed);
+  }
+  pile.instanceColor.needsUpdate = true;
+}
+
+// dust motes
+const dust = (() => {
+  const n = 900, pos = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) { pos[i * 3] = -14 + rnd() * 34; pos[i * 3 + 1] = -2.6 + rnd() * 11; pos[i * 3 + 2] = -12 + rnd() * 26; }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const m = new THREE.PointsMaterial({ color: 0xffb8a8, size: 0.035, transparent: true, opacity: 0.4, depthWrite: false, blending: THREE.AdditiveBlending });
+  const p = new THREE.Points(g, m); scene.add(p); return p;
+})();
+
+/* ================= callouts ================= */
+const labelsRoot = document.getElementById('labels');
+const labels = [];
+const V3 = (x, y, z) => new THREE.Vector3(x, y, z);
+function addLabel(o) {
+  const el = document.createElement('div');
+  el.className = 'lbl';
+  el.innerHTML = '<i class="dot"></i><i class="ln"></i><span class="tx"></span>';
+  labelsRoot.appendChild(el);
+  labels.push(Object.assign({ el, tx: el.querySelector('.tx'), last: '', vis: false, flip: null }, o));
+}
+const nf0 = S.nf.nf0;
+addLabel({ text: 'Tragt · granulat', at: V3(5.45, 2.33, 0.4), w: [1.4, 1.72, 2.4, 2.75] });
+addLabel({ text: '4 varmezoner · op til 420 °C', at: V3(3.2, -0.3, 0.44), w: [1.45, 1.77, 2.4, 2.75], flipTo: true });
+addLabel({ text: 'Stempel · Ø10–18 mm', at: V3(8.05, 0.52, 0), w: [1.5, 1.82, 2.4, 2.75] });
+addLabel({ text: 'Form · 75 × 75 mm indsatser', at: V3(0, 1.1, 0.4), w: [1.55, 1.87, 2.4, 2.75] });
+addLabel({ text: 'Lukkeenhed · 62,5 kN', at: V3(-3.9, 0.52, 0), w: [1.6, 1.92, 2.4, 2.75] });
+addLabel({ text: 'Styring · 8″ touch', at: V3(2.3, 1.9, 1.75), w: [1.65, 1.97, 2.4, 2.75] });
+addLabel({ text: (s) => { const c = S.tele(s).cyl; return 'Zoner · ' + [1, 0.97, 0.93, 0.86].map((f) => nf0.format(24 + (c - 24) * f)).join(' / ') + ' °C'; }, at: V3(3.55, 0.47, 0), w: [3.55, 3.8, 4.4, 4.6] });
+addLabel({ text: (s) => 'Fyldning · ' + nf0.format(S.tele(s).fill * 100) + ' %', at: V3(0, 1.1, 0.2), w: [4.5, 4.62, 5.45, 5.6] });
+addLabel({ text: (s) => { const p = S.tele(s).part; return 'Emne · ' + (p == null ? '—' : nf0.format(p) + ' °C'); }, at: V3(0, 1.1, 0.2), w: [5.5, 5.65, 6.45, 6.6] });
+addLabel({ text: 'Åbningsslag · 110 mm', at: V3(-0.75, 1.12, 0), w: [6.75, 6.9, 7.15, 7.3] });
+addLabel({ text: 'Skud · 4 kaviteter · 12 tænder', at: () => shot.position, w: [7.75, 7.95, 8.3, 8.45], dy: 1.25 });
+addLabel({ text: 'Afgratet · klar til kontrol', at: () => shot.position, w: [8.45, 8.62, 9.3, 9.42], dy: 1.25 });
+addLabel({ text: '1.036 korn granulat · 37 × 28', at: V3(FC.x - 2.4, FC.y - 1.95, FC.z), w: [11.7, 11.95, 99, 100] });
+
+const _v = new THREE.Vector3();
+function updateLabels(s) {
+  const W = innerWidth, H = innerHeight;
+  for (const L of labels) {
+    const a = Math.min(seg(s, L.w[0], L.w[1]), 1 - seg(s, L.w[2], L.w[3]));
+    if (a <= 0.002) { if (L.vis) { L.el.style.opacity = '0'; L.vis = false; } continue; }
+    _v.copy(typeof L.at === 'function' ? L.at() : L.at);
+    if (L.dy) _v.y += L.dy * shot.scale.x * 0.3;
+    _v.project(camera);
+    if (_v.z > 1) { L.el.style.opacity = '0'; L.vis = false; continue; }
+    const x = (_v.x * 0.5 + 0.5) * W, y = (-_v.y * 0.5 + 0.5) * H;
+    L.el.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0)';
+    L.el.style.opacity = a.toFixed(3);
+    L.vis = true;
+    const flip = x > W * 0.8;
+    if (flip !== L.flip) { L.flip = flip; L.el.classList.toggle('l', flip); }
+    const txt = typeof L.text === 'function' ? L.text(s) : L.text;
+    if (txt !== L.last) { L.last = txt; L.tx.textContent = txt; }
+  }
+}
+
+/* ================= HMI ================= */
+function drawHMI(s) {
+  const d = S.tele(s);
+  hx.fillStyle = '#07090b'; hx.fillRect(0, 0, 512, 320);
+  hx.fillStyle = '#c8102e'; hx.fillRect(0, 0, 512, 40);
+  hx.fillStyle = '#ffffff'; hx.font = '700 17px "JetBrains Mono", monospace'; hx.textBaseline = 'middle';
+  hx.textAlign = 'left'; hx.fillText('INJECT · 6/12', 14, 21);
+  hx.textAlign = 'right'; hx.fillText(d.ph.toUpperCase(), 498, 21); hx.textAlign = 'left';
+  const zf = [1, 0.97, 0.93, 0.86];
+  for (let k = 0; k < 4; k++) {
+    const x = 18 + k * 58, temp = 24 + (d.cyl - 24) * zf[k], h = (temp / 260) * 118;
+    hx.fillStyle = '#161b20'; hx.fillRect(x, 58, 40, 118);
+    const gr = hx.createLinearGradient(0, 176, 0, 58); gr.addColorStop(0, '#c8102e'); gr.addColorStop(1, '#ff8a2a');
+    hx.fillStyle = temp > 100 ? gr : '#5a1a22'; hx.fillRect(x, 176 - h, 40, h);
+    hx.fillStyle = '#8d96a0'; hx.font = '500 13px "JetBrains Mono", monospace'; hx.fillText('Z' + (k + 1), x + 11, 190);
+    hx.fillStyle = '#ffffff'; hx.font = '700 14px "JetBrains Mono", monospace'; hx.fillText(Math.round(temp) + '°', x + 3, 210);
+  }
+  const gx = 262, gy = 58, gw = 232, gh = 150;
+  hx.strokeStyle = '#1e252c'; hx.lineWidth = 1;
+  for (let i = 0; i <= 4; i++) { hx.beginPath(); hx.moveTo(gx, gy + (gh * i) / 4); hx.lineTo(gx + gw, gy + (gh * i) / 4); hx.stroke(); }
+  hx.strokeStyle = '#ff3a4e'; hx.lineWidth = 2.5; hx.beginPath();
+  for (let i = 0; i <= 120; i++) { const T = (i / 120) * 8.4; const ss = 2.3 + (T / 8.4) * 5.5; const p = S.tele(ss).p; const px = gx + (T / 8.4) * gw, py = gy + gh - (p / 1800) * gh; if (i) hx.lineTo(px, py); else hx.moveTo(px, py); }
+  hx.stroke();
+  const cx = gx + (d.cyc / 8.4) * gw;
+  hx.strokeStyle = '#ffffff'; hx.lineWidth = 1.5; hx.beginPath(); hx.moveTo(cx, gy); hx.lineTo(cx, gy + gh); hx.stroke();
+  hx.fillStyle = '#8d96a0'; hx.font = '500 12px "JetBrains Mono", monospace'; hx.fillText('TRYK · BAR', gx, gy + gh + 16);
+  hx.fillStyle = '#ffffff'; hx.font = '700 22px "JetBrains Mono", monospace';
+  hx.fillText(nf0.format(d.p) + ' bar', 18, 262);
+  hx.fillText(S.nf.nf1.format(d.clampF) + ' kN', 196, 262);
+  hx.fillText('T+' + S.nf.nf2.format(d.cyc), 360, 262);
+  hx.fillStyle = '#8d96a0'; hx.font = '500 12px "JetBrains Mono", monospace';
+  hx.fillText('TRYK', 18, 290); hx.fillText('LUKKEKRAFT', 196, 290); hx.fillText('CYKLUS · S', 360, 290);
+  hx.fillStyle = '#c8102e'; hx.fillRect(0, 314, 512 * (d.cyc / 8.4), 6);
+  hmiTex.needsUpdate = true;
+}
+
+/* ================= camera path ================= */
+const KF = [
+  { s: 0, p: [11.5, 4.6, 19.5], t: [2.2, -0.6, 0], sh: 0.18 },
+  { s: 1, p: [2.5, 10.5, 12.5], t: [2.0, -0.8, 0], sh: 0.0 },
+  { s: 2, p: [-6.5, 4.5, 16.5], t: [2.2, -0.5, 0], sh: 0.24 },
+  { s: 3, p: [10.4, 5.0, 7.0], t: [5.3, 1.3, 0], sh: 0.22 },
+  { s: 4, p: [6.2, 2.0, 5.6], t: [3.7, 0.1, 0], sh: 0.22 },
+  { s: 5, p: [-4.4, 2.5, 4.2], t: [0.1, 0.0, 0], sh: 0.22 },
+  { s: 6, p: [-4.0, 1.0, 4.4], t: [0.0, 0.0, 0.1], sh: 0.22 },
+  { s: 7, p: [-2.9, 1.6, 5.8], t: [-0.7, 0.0, 0.3], sh: 0.22 },
+  { s: 8, p: [-7.5, 3.2, 13.5], t: [0.5, -0.3, 0], sh: 0.22 },
+  { s: 9, p: [-9.5, 4.5, 11.5], t: [1.0, -0.5, 0], sh: 0.22 },
+  { s: 10, p: [4.5, 15.5, 12.0], t: [2.5, -1.5, -2.0], sh: 0.0 },
+  { s: 11, p: [12.5, 2.6, 8.8], t: [3.2, -0.1, 0], sh: -0.22 },
+  { s: 12, p: [-1.0, 2.3, 16.5], t: [-1.0, 2.05, 4.0], sh: 0.25 },
+];
+const camPos = new THREE.Vector3(), camTgt = new THREE.Vector3();
+let camShift = 0, distMul = 1, W = innerWidth, H = innerHeight, narrow = W < 960;
+function camAt(s) {
+  s = Math.max(KF[0].s, Math.min(KF[KF.length - 1].s, s));
+  let i = 0;
+  while (i < KF.length - 2 && s > KF[i + 1].s) i++;
+  const A = KF[i], B = KF[i + 1];
+  const u = sm5(clamp01((s - A.s) / (B.s - A.s)));
+  camPos.set(lerp(A.p[0], B.p[0], u), lerp(A.p[1], B.p[1], u), lerp(A.p[2], B.p[2], u));
+  camTgt.set(lerp(A.t[0], B.t[0], u), lerp(A.t[1], B.t[1], u), lerp(A.t[2], B.t[2], u));
+  camShift = lerp(A.sh, B.sh, u);
+}
+function resize() {
+  W = innerWidth; H = innerHeight; narrow = W < 960;
+  renderer.setSize(W, H, false);
+  composer.setSize(W, H);
+  camera.aspect = W / H;
+  const baseTan = Math.tan(THREE.MathUtils.degToRad(16)), ref = 1.6;
+  if (camera.aspect < ref) {
+    const need = (baseTan * ref) / camera.aspect;
+    const use = Math.min(need, Math.tan(THREE.MathUtils.degToRad(29)));
+    camera.fov = THREE.MathUtils.radToDeg(Math.atan(use)) * 2;
+    distMul = need / use;
+  } else { camera.fov = 32; distMul = 1; }
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', resize, { passive: true });
+resize();
+
+/* ================= materials presets ================= */
+const PRESETS = {
+  red: { c: 0xc8102e, r: 0.3, cc: 0.85, op: 1 },
+  PP: { c: 0xe6e0d0, r: 0.42, cc: 0.2, op: 1 },
+  PE: { c: 0xf1eee6, r: 0.55, cc: 0.1, op: 1 },
+  ABS: { c: 0xebe0c5, r: 0.3, cc: 0.6, op: 1 },
+  PA: { c: 0xe2d5b5, r: 0.45, cc: 0.25, op: 1 },
+  POM: { c: 0xf7f5ef, r: 0.2, cc: 0.75, op: 1 },
+  PC: { c: 0xb9d6e4, r: 0.04, cc: 1, op: 0.42 },
+  PMMA: { c: 0xd5eef0, r: 0.02, cc: 1, op: 0.36 },
+  PS: { c: 0xf2f2f2, r: 0.25, cc: 0.6, op: 1 },
+  TPE: { c: 0x1d1d1f, r: 0.85, cc: 0, op: 1 },
+  PBT: { c: 0x2c2c2e, r: 0.4, cc: 0.3, op: 1 },
+  PCABS: { c: 0x3a3b3e, r: 0.35, cc: 0.45, op: 1 },
+  PEEK: { c: 0xc4a473, r: 0.36, cc: 0.5, op: 1 },
+};
+const _tc = new THREE.Color();
+function applyMaterial(dt) {
+  const p = PRESETS[S.mat] || PRESETS.red;
+  const k = 1 - Math.exp(-dt * 7);
+  shotMat.color.lerp(_tc.set(p.c), k);
+  shotMat.roughness = lerp(shotMat.roughness, p.r, k);
+  shotMat.clearcoat = lerp(shotMat.clearcoat, p.cc, k);
+  const wantT = p.op < 1;
+  if (wantT && !shotMat.transparent) { shotMat.transparent = true; shotMat.needsUpdate = true; }
+  shotMat.opacity = lerp(shotMat.opacity, p.op, k);
+  if (!wantT && shotMat.transparent && shotMat.opacity > 0.995) { shotMat.transparent = false; shotMat.opacity = 1; shotMat.needsUpdate = true; }
+  runMat.color.copy(shotMat.color);
+  runMat.roughness = shotMat.roughness;
+}
+
+/* ================= per-frame state ================= */
+const qMold = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, Math.PI / 2, 0));
+const qFlag = new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI / 2, 0, 0));
+const Y = new THREE.Vector3(0, 1, 0);
+const _m = new THREE.Matrix4(), _q = new THREE.Quaternion(), _q2 = new THREE.Quaternion(), _sc = new THREE.Vector3();
+const _pos = new THREE.Vector3(), _c = new THREE.Vector3(), _f = new THREE.Vector3(), _sp = new THREE.Vector3(), _sq = new THREE.Quaternion(), _e = new THREE.Euler();
+const zero = new THREE.Matrix4().makeScale(0, 0, 0);
+const _hc = new THREE.Color();
+let spin = 0, ptrX = 0, ptrY = 0, hmiT = 0, lastHmiS = -1;
+
+function bez(out, a, c, b, t) {
+  const u = 1 - t;
+  out.set(u * u * a.x + 2 * u * t * c.x + t * t * b.x, u * u * a.y + 2 * u * t * c.y + t * t * b.y, u * u * a.z + 2 * u * t * c.z + t * t * b.z);
+}
+function flagPos(i, t, out) {
+  const col = i % COLS, row = (i / COLS) | 0;
+  const amp = 0.04 + 0.15 * (col / (COLS - 1));
+  const ph = col * 0.36 - t * 2.3 + row * 0.07;
+  out.set(FC.x + (col - (COLS - 1) / 2) * FSP, FC.y + ((ROWS - 1) / 2 - row) * FSP + Math.sin(ph * 0.5) * 0.02, FC.z + Math.sin(ph) * amp);
+  return (Math.cos(ph) * amp * 0.36) / FSP;
+}
+
+function update(s, t, dt) {
+  /* camera */
+  camAt(s);
+  const kp = 1 - Math.exp(-dt * 2.5);
+  ptrX += (S.ptr.x - ptrX) * kp; ptrY += (S.ptr.y - ptrY) * kp;
+  if (distMul !== 1) camPos.sub(camTgt).multiplyScalar(distMul).add(camTgt);
+  camera.position.copy(camPos);
+  camera.position.x += Math.sin(t * 0.23) * 0.1;
+  camera.position.y += Math.sin(t * 0.31) * 0.07;
+  camera.lookAt(camTgt);
+  if (!coarse) { camera.translateX(ptrX * 0.35); camera.translateY(-ptrY * 0.2); camera.lookAt(camTgt); }
+  camera.setViewOffset(W, H, narrow ? 0 : -camShift * W, narrow ? H * 0.1 : 0, W, H);
+  camera.updateMatrixWorld();
+
+  /* clamp unit */
+  const open = eio(seg(s, TL.openA, TL.openB)) * (1 - eio(seg(s, TL.closeA, TL.closeB)));
+  const off = -1.5 * open;
+  movingPlaten.position.x = -1.125 + off;
+  movingHalf.position.x = -0.45 + off;
+  const rodLen = 2.05 + off;
+  clampRod.scale.x = rodLen;
+  clampRod.position.x = -3.4 + rodLen / 2;
+
+  /* heating + plunger */
+  const heat = eio(seg(s, TL.heatA, TL.heatB));
+  const hc = _hc.setRGB(lerp(0.6, 1.0, heat), lerp(0.05, 0.26, heat), lerp(0.02, 0.06, heat));
+  heaterMats.forEach((m, k) => {
+    m.emissive.copy(hc);
+    m.emissiveIntensity = heat * (2.3 - k * 0.32) * (0.93 + 0.07 * Math.sin(t * 6 + k * 1.9));
+  });
+  meltBarrelMat.emissiveIntensity = heat * 2.1;
+  barrelL.intensity = heat * 14;
+  const inj = eio(seg(s, TL.injA, TL.injB));
+  const recharge = eio(seg(s, 7.8, 9.3));
+  const pX = lerp(5.95, 2.45, inj * (1 - recharge));
+  meltBarrel.scale.x = pX - 1.9; meltBarrel.position.x = 1.9 + (pX - 1.9) / 2;
+  plunger.scale.x = 7.3 - pX; plunger.position.x = pX + (7.3 - pX) / 2;
+  plungerHead.position.x = pX + 0.04;
+  const pulse = Math.sin(Math.PI * seg(s, TL.injA, TL.injB + 0.15));
+  nozGlowMat.opacity = clamp01(heat * 0.3 + pulse);
+
+  /* melt flow + cooling */
+  U.uFill.value = eio(seg(s, TL.injA + 0.05, TL.injB - 0.1)) * 1.9 + seg(s, TL.injB, TL.injB + 0.35) * 0.5;
+  U.uHeat.value = 1 - eio(seg(s, TL.coolA, TL.coolB));
+  meltL.intensity = (U.uFill.value > 0 ? 1 : 0) * U.uHeat.value * 9 * (1 - open);
+  const xr = seg(s, 4.25, 4.7) * (1 - seg(s, 7.7, 8.3));
+  M.paintX.opacity = 1 - 0.88 * xr;
+  M.paintX.depthWrite = xr < 0.05;
+  movingPlaten.children[0].material = xr > 0.05 ? M.edgeW : M.edgeF;
+
+  /* shot pose */
+  const dep = eio(seg(s, TL.depA, TL.depB));
+  shot.visible = U.uFill.value > 0.001 && dep < 0.999;
+  if (shot.visible) {
+    const ej = eio(seg(s, TL.ejA, TL.ejB)) * 0.55;
+    _pos.set(off + ej, 0, 0);
+    const fly = eio(seg(s, TL.flyA, TL.flyB));
+    if (fly > 0) {
+      _sp.set(dep * 2.4, 0.1 + dep * 1.8, -7.2 - dep * 3).applyMatrix4(camera.matrixWorld);
+      _e.set(-0.32 + Math.sin(t * 0.3) * 0.05, 0.42 + Math.sin(t * 0.35) * 0.2 + (s - 8) * 0.12, 0);
+      _sq.setFromEuler(_e).premultiply(camera.quaternion);
+      shot.position.lerpVectors(_pos, _sp, fly);
+      shot.position.y += Math.sin(Math.PI * fly) * 0.7;
+      shot.quaternion.copy(qMold).slerp(_sq, fly);
+      shot.scale.setScalar(lerp(1, 1.3, fly) * (1 - 0.6 * dep));
+    } else {
+      shot.position.copy(_pos); shot.quaternion.copy(qMold); shot.scale.setScalar(1);
+    }
+    const deg = eio(seg(s, TL.degA, TL.degB));
+    tree.visible = deg < 0.999;
+    runMat.opacity = 1 - deg;
+    tree.position.set(0, -deg * 0.9, deg * 0.25);
+    if (s < TL.degA) spin = 0; else spin += dt * 0.8 * deg;
+    const th = (spin + Math.max(0, s - TL.degA) * 1.3) * deg;
+    gears.forEach((g, k) => {
+      g.position.set(lerp(PLUS[k][0], SQ[k][0], deg), lerp(PLUS[k][1], SQ[k][1], deg), Math.sin(Math.PI * deg) * 0.2 * (k % 2 ? 1 : -1));
+      g.rotation.z = OFF[k] + SGN[k] * th;
+    });
+  }
+  applyMaterial(dt);
+
+  /* granulate */
+  for (let i = 0; i < NP; i++) {
+    const b = P.base[i], ph = i * 3;
+    _c.set(b.x + Math.sin(t * 0.21 + P.ph[ph]) * 0.35, b.y + Math.sin(t * 0.17 + P.ph[ph + 1]) * 0.3, b.z + Math.cos(t * 0.19 + P.ph[ph + 2]) * 0.35);
+    _q.setFromAxisAngle(P.axis[i], t * P.spd[i] + P.ph[ph]);
+    let sc = 1.05;
+    const v = seg(s, P.fS[i], P.fS[i] + 0.42);
+    if (v > 0) {
+      const e = eio(v);
+      const slope = flagPos(i, t, _f);
+      bez(_pos, _c, P.cF[i], _f, e);
+      _q2.setFromAxisAngle(Y, -Math.atan(slope) * 0.8).multiply(qFlag);
+      _q.slerp(_q2, e);
+      sc = lerp(1.05, 1.0, e);
+    } else {
+      const u = seg(s, P.hS[i], P.hS[i] + 0.5);
+      if (u <= 0) _pos.copy(_c);
+      else if (u < 0.8) { const e = eio(u / 0.8); bez(_pos, _c, P.cH[i], P.mouth[i], e); sc = lerp(1.05, 1, e); }
+      else if (u < 1) { const e = (u - 0.8) / 0.2; _pos.lerpVectors(P.mouth[i], THROAT, e); sc = 1 - e * 0.7; }
+      else { pellets.setMatrixAt(i, zero); continue; }
+    }
+    _sc.setScalar(sc);
+    _m.compose(_pos, _q, _sc);
+    pellets.setMatrixAt(i, _m);
+  }
+  pellets.instanceMatrix.needsUpdate = true;
+  const pileFill = seg(s, TL.hopA + 0.35, TL.hopB);
+  const nVis = Math.round(pileFill * NPILE);
+  if (pile.userData.n !== nVis) {
+    for (let i = 0; i < NPILE; i++) pile.setMatrixAt(i, i < nVis ? pileM[i] : zero);
+    pile.instanceMatrix.needsUpdate = true;
+    pile.userData.n = nVis;
+  }
+
+  dust.rotation.y = t * 0.012;
+  dust.position.y = Math.sin(t * 0.2) * 0.25;
+
+  /* HMI + labels */
+  hmiT += dt;
+  if (hmiT > 0.12 && Math.abs(s - lastHmiS) > 0.0005) { hmiT = 0; lastHmiS = s; drawHMI(s); }
+  if (!narrow) updateLabels(s);
+}
+
+/* ================= loop ================= */
+const clock = new THREE.Clock();
+let failed = false, perfT = 0, perfN = 0, slowSecs = 0;
+function adapt(dt) {
+  perfT += dt; perfN++;
+  if (perfT < 1) return;
+  const avg = perfT / perfN; perfT = 0; perfN = 0;
+  slowSecs = avg > 0.034 ? slowSecs + 1 : 0;
+  if (slowSecs >= 2 && DPR > 0.8) {
+    DPR = Math.max(0.75, DPR - 0.25);
+    renderer.setPixelRatio(DPR); composer.setPixelRatio(DPR); resize();
+    slowSecs = 0;
+  }
+}
+drawHMI(0);
+function frame() {
+  requestAnimationFrame(frame);
+  const raw = clock.getDelta();
+  const dt = Math.min(raw, 0.05);
+  if (!document.hidden) adapt(raw);
+  const t = clock.elapsedTime;
+  try { update(S.s, t, dt); } catch (err) { if (!failed) { failed = true; console.error(err); } }
+  composer.render(dt);
+  if (!S.ready) { S.ready = true; document.documentElement.classList.add('gl-ready'); }
+}
+frame();
+
+</script>
 </body>
 </html>
