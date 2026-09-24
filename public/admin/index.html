@@ -342,34 +342,57 @@ function renderHbars(data){
  make("deliveryBars",delivery);make("fileBars",files);
 }
 function renderTable(data){
- els.rows.innerHTML=data.map(function(x){return'<tr data-id="'+x.id+'"><td class="id">'+x.id+'</td><td>'+formatDate(x.date)+'</td><td>'+esc(x.company)+'</td><td>'+esc(x.contact)+'</td><td class="desc" title="'+esc(x.desc)+'">'+esc(x.desc)+'</td><td>'+formatQty(x.qty)+'</td><td>'+esc(x.material)+'</td><td>'+esc(x.delivery)+'</td><td>📎 '+x.files.length+'</td><td><span class="status '+statusClass(x.status)+'">'+esc(x.status)+'</span></td></tr>'}).join("");
+ els.rows.innerHTML=data.map(function(x){return'<tr data-id="'+x.id+'"><td class="id">'+x.id+'</td><td>'+formatDate(x.date)+'</td><td>'+esc(x.company)+'</td><td>'+esc(x.contact)+'</td><td class="desc" title="'+esc(x.desc)+'">'+esc(x.desc)+'</td><td>'+(x.qty?formatQty(x.qty):esc(x.quantityBucket==="unknown"?"Ikke angivet":x.quantityBucket))+'</td><td>'+esc(x.material)+'</td><td>'+esc(x.delivery)+'</td><td>📎 '+x.files.length+'</td><td><span class="status '+statusClass(x.status)+'">'+esc(x.status)+'</span></td></tr>'}).join("");
  els.empty.hidden=data.length>0;els.tableCount.textContent=data.length+" "+(data.length===1?"post":"poster");
  Array.prototype.forEach.call(els.rows.querySelectorAll("tr"),function(tr){tr.addEventListener("click",function(){openLead(tr.getAttribute("data-id"))})});
 }
-function openLead(id){
+async function openLead(id){
  var x=leads.find(function(v){return v.id===id});if(!x)return;
- els.drawerContent.innerHTML='<div class="drawer-k">'+x.id+'</div><h2>'+esc(x.desc)+'</h2><div class="drawer-company">'+esc(x.company)+' · '+esc(x.contact)+'</div>'+
- '<div class="detail-grid"><div class="detail"><span>Antal</span><b>'+formatQty(x.qty)+' stk.</b></div><div class="detail"><span>Materiale</span><b>'+esc(x.material)+'</b></div><div class="detail"><span>Levering</span><b>'+esc(x.delivery)+'</b></div><div class="detail"><span>Kilde</span><b>'+esc(x.source)+'</b></div><div class="detail"><span>Modtaget</span><b>'+formatDate(x.date)+'</b></div><div class="detail"><span>Svartid</span><b>'+(x.responseHours==null?"Ikke besvaret":String(x.responseHours).replace(".",",")+" timer")+'</b></div></div>'+
- '<section class="drawer-section"><h3>Kontakt</h3><div>'+esc(x.contact)+'</div><div style="color:var(--mute);margin-top:4px">'+esc(x.email)+'</div></section>'+
- '<section class="drawer-section"><h3>Filer</h3>'+x.files.map(function(f){return'<div class="file"><span>'+esc(f)+'</span><small>Upload</small></div>'}).join("")+'</section>'+
- '<section class="drawer-section"><h3>Intern note</h3><div style="color:var(--bone2);line-height:1.55">'+esc(x.note)+'</div></section>'+
- '<section class="drawer-section"><h3>Status</h3><select class="status-select" id="drawerStatus">'+["Ny","Under behandling","Tilbud sendt","Vundet","Tabt"].map(function(s){return'<option'+(s===x.status?" selected":"")+'>'+s+'</option>'}).join("")+'</select></section>';
- document.getElementById("drawerStatus").addEventListener("change",async function(e){
-   var select=e.target,old=x.status,next=select.value;
-   select.disabled=true;
-   try{
-     var res=await fetch("/admin/api/requests/"+encodeURIComponent(x.id),{
-       method:"PATCH",
-       headers:{"content-type":"application/json","accept":"application/json"},
-       body:JSON.stringify({status:uiStatusToApi(next)})
-     });
-     if(!res.ok)throw new Error("HTTP "+res.status);
-     x.status=next;render();showToast(x.id+" er ændret til "+x.status);
-   }catch(err){
-     console.error(err);select.value=old;showToast("Status kunne ikke gemmes");
-   }finally{select.disabled=false}
- });
+ els.drawerContent.innerHTML='<div class="drawer-k">'+esc(x.id)+'</div><h2>'+esc(x.desc)+'</h2><div class="drawer-company">'+esc(x.company)+' · '+esc(x.contact)+'</div><div class="drawer-section"><div class="panel-note">Henter sagsdata…</div></div>';
  els.drawer.classList.add("on");els.backdrop.classList.add("on");els.drawer.setAttribute("aria-hidden","false");
+
+ try{
+   var response=await fetch("/admin/api/requests/"+encodeURIComponent(id),{headers:{"accept":"application/json"},cache:"no-store"});
+   if(!response.ok)throw new Error("HTTP "+response.status);
+   var payload=await response.json(),r=payload.request||{},files=payload.files||[];
+   var uiStatus=apiStatusToUi(r.status);
+   var qtyText=r.quantity?formatQty(Number(r.quantity))+" stk.":(r.quantity_bucket&&r.quantity_bucket!=="unknown"?r.quantity_bucket:"Ikke angivet");
+   var fileHtml=files.length?files.map(function(file){
+     return '<a class="file" href="/admin/api/files/'+encodeURIComponent(file.id)+'" target="_blank" rel="noopener"><span>'+esc(file.original_name)+'</span><small>'+formatBytes(file.size_bytes)+' · Hent</small></a>';
+   }).join(""):'<div style="color:var(--dim);font-size:12px">Ingen filer</div>';
+
+   els.drawerContent.innerHTML=
+   '<div class="drawer-k">'+esc(id)+'</div><h2>'+esc(r.description||x.desc)+'</h2><div class="drawer-company">'+esc(r.company_name||x.company)+' · '+esc(r.contact_name||x.contact)+'</div>'+
+   '<div class="detail-grid"><div class="detail"><span>Antal</span><b>'+esc(qtyText)+'</b></div><div class="detail"><span>Materiale</span><b>'+esc(r.material||"Ved ikke")+'</b></div><div class="detail"><span>Levering</span><b>'+esc(r.delivery_bucket||"Ikke angivet")+'</b></div><div class="detail"><span>Kilde</span><b>'+esc(r.source||r.utm_source||"Ukendt")+'</b></div><div class="detail"><span>Modtaget</span><b>'+formatDate(r.created_at)+'</b></div><div class="detail"><span>Svartid</span><b>'+(r.first_response_at?String(responseHours(r.created_at,r.first_response_at)).replace(".",",")+" timer":"Ikke besvaret")+'</b></div></div>'+
+   '<section class="drawer-section"><h3>Kontakt</h3><div>'+esc(r.contact_name||"")+'</div><div style="color:var(--mute);margin-top:4px">'+esc(r.email||"")+(r.phone?' · '+esc(r.phone):'')+'</div></section>'+
+   '<section class="drawer-section"><h3>Filer</h3>'+fileHtml+'</section>'+
+   '<section class="drawer-section"><h3>Intern note</h3><textarea id="drawerNote" style="width:100%;min-height:110px;background:#171313;color:var(--bone);border:1px solid var(--line2);padding:11px;resize:vertical">'+esc(r.internal_note||"")+'</textarea><button class="btn" id="saveNote" type="button" style="margin-top:9px">Gem note</button></section>'+
+   '<section class="drawer-section"><h3>Status</h3><select class="status-select" id="drawerStatus">'+["Ny","Under behandling","Tilbud sendt","Vundet","Tabt"].map(function(s){return'<option'+(s===uiStatus?' selected':'')+'>'+s+'</option>'}).join("")+'</select></section>';
+
+   document.getElementById("drawerStatus").addEventListener("change",async function(e){
+     var select=e.target,old=x.status,next=select.value;select.disabled=true;
+     try{
+       var res=await fetch("/admin/api/requests/"+encodeURIComponent(x.id),{method:"PATCH",headers:{"content-type":"application/json","accept":"application/json"},body:JSON.stringify({status:uiStatusToApi(next)})});
+       if(!res.ok)throw new Error("HTTP "+res.status);
+       x.status=next;render();showToast(x.id+" er ændret til "+x.status);
+     }catch(err){console.error(err);select.value=old;showToast("Status kunne ikke gemmes")}finally{select.disabled=false}
+   });
+
+   document.getElementById("saveNote").addEventListener("click",async function(){
+     var btn=this,note=document.getElementById("drawerNote").value;btn.disabled=true;
+     try{
+       var res=await fetch("/admin/api/requests/"+encodeURIComponent(x.id),{method:"PATCH",headers:{"content-type":"application/json","accept":"application/json"},body:JSON.stringify({internal_note:note})});
+       if(!res.ok)throw new Error("HTTP "+res.status);
+       x.note=note;showToast("Noten er gemt");
+     }catch(err){console.error(err);showToast("Noten kunne ikke gemmes")}finally{btn.disabled=false}
+   });
+ }catch(err){
+   console.error(err);
+   els.drawerContent.innerHTML='<div class="drawer-k">'+esc(id)+'</div><h2>Kunne ikke hente sagen</h2><div class="drawer-company">Prøv igen om et øjeblik.</div>';
+ }
+}
+function formatBytes(n){
+ n=Number(n)||0;if(n<1024)return n+" B";if(n<1048576)return (n/1024).toFixed(1).replace(".",",")+" KB";return (n/1048576).toFixed(1).replace(".",",")+" MB";
 }
 function closeDrawer(){els.drawer.classList.remove("on");els.backdrop.classList.remove("on");els.drawer.setAttribute("aria-hidden","true")}
 function showToast(msg){els.toast.textContent=msg;els.toast.classList.add("on");clearTimeout(showToast.t);showToast.t=setTimeout(function(){els.toast.classList.remove("on")},2500)}
