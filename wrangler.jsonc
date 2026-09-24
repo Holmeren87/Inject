@@ -11,5 +11,11 @@
       "database_name": "inject-production",
       "database_id": "a475780f-e403-42cf-87a5-aa54578a420d"
     }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "FILES",
+      "bucket_name": "inject-files"
+    }
   ]
 }
