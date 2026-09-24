@@ -1,5 +1,5 @@
 const JSON_HEADERS = { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" };
-const ALLOWED_FILE_EXTENSIONS = new Set(["step","stp","stl","pdf","dxf","jpg","jpeg","png","webp"]);
+const ALLOWED_FILE_EXTENSIONS = new Set(["step","stp","stl","pdf","dxf","jpg","jpeg","png","webp","heic","heif"]);
 const MAX_FILES = 8;
 const MAX_FILE_BYTES = 25 * 1024 * 1024;
 const MAX_TOTAL_BYTES = 60 * 1024 * 1024;
@@ -10,7 +10,7 @@ export default {
 
     try {
       if (url.pathname === "/api/health" && request.method === "GET") {
-        return json({ ok: true, service: "inject-api" });
+        return json({ ok: true, service: "inject-api", email_configured: Boolean(env.RESEND_API_KEY) });
       }
 
       if (url.pathname === "/api/rfq" && request.method === "POST") {
@@ -300,6 +300,7 @@ async function createRfq(request, env) {
       ok: true,
       case_number: caseNumber,
       files: storedFiles,
+      notification_sent: Boolean(notification.sent),
       message: "Forespørgslen er modtaget."
     }, 201);
   } catch (error) {
@@ -335,33 +336,45 @@ async function sendLeadNotification(env, lead) {
     '<p><a href="https://inject.dk/admin/">Åbn Inject Admin</a></p>' +
     '</div>';
 
-  try {
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "authorization": "Bearer " + env.RESEND_API_KEY,
-        "content-type": "application/json"
-      },
-      body: JSON.stringify({
-        from: "Inject Leads <leads@notify.inject.dk>",
-        to: ["contact@inject.dk"],
-        subject,
-        text: textBody,
-        html: htmlBody
-      })
-    });
+  const requestBody = JSON.stringify({
+    from: "Inject Leads <leads@notify.inject.dk>",
+    to: ["contact@inject.dk"],
+    subject,
+    text: textBody,
+    html: htmlBody
+  });
 
-    const payload = await response.json().catch(() => ({}));
-    if (!response.ok) {
-      console.error("Resend lead notification failed", response.status, payload);
-      return { sent: false, provider: "resend", status: response.status, error: payload?.message || "resend_failed" };
+  let lastError = null;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const response = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "authorization": "Bearer " + env.RESEND_API_KEY,
+          "content-type": "application/json"
+        },
+        body: requestBody
+      });
+
+      const payload = await response.json().catch(() => ({}));
+      if (response.ok) {
+        return { sent: true, provider: "resend", id: payload?.id || null, attempts: attempt };
+      }
+
+      lastError = { status: response.status, error: payload?.message || "resend_failed" };
+      console.error("Resend lead notification failed", attempt, response.status, payload);
+
+      // Do not retry permanent 4xx errors. 429 and 5xx may be transient.
+      if (response.status !== 429 && response.status < 500) break;
+    } catch (error) {
+      lastError = { error: String(error && error.message || error) };
+      console.error("lead notification failed", attempt, error);
     }
 
-    return { sent: true, provider: "resend", id: payload?.id || null };
-  } catch (error) {
-    console.error("lead notification failed", error);
-    return { sent: false, provider: "resend", error: String(error && error.message || error) };
+    if (attempt < 3) await new Promise(resolve => setTimeout(resolve, attempt * 350));
   }
+
+  return { sent: false, provider: "resend", attempts: 3, ...(lastError || { error: "resend_failed" }) };
 }
 
 function escapeHtml(value) {
