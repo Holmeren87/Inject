@@ -144,7 +144,7 @@ h1{font:780 clamp(27px,3vw,42px)/1 var(--display);font-stretch:122%;letter-spaci
         <div class="table-title"><h2>Forespørgsler</h2><p id="tableCount">0 poster</p></div>
         <div class="filters">
           <select class="filter" id="qtyFilter" aria-label="Antal emner">
-            <option value="">Alle antal</option><option value="0-100">0–100</option><option value="101-1000">101–1.000</option><option value="1001-5000">1.001–5.000</option><option value="5001-10000">5.001–10.000</option><option value="10001+">10.001+</option>
+            <option value="">Alle antal</option><option value="0-1000">0–1.000</option><option value="1001-5000">1.001–5.000</option><option value="5001-10000">5.001–10.000</option><option value="10001-25000">10.001–25.000</option><option value="25001+">25.001+</option><option value="unknown">Ikke angivet</option>
           </select>
           <select class="filter" id="materialFilter" aria-label="Materiale"><option value="">Alle materialer</option></select>
           <select class="filter" id="statusFilter" aria-label="Status"><option value="">Alle statusser</option><option>Ny</option><option>Under behandling</option><option>Tilbud sendt</option><option>Vundet</option><option>Tabt</option></select>
@@ -188,7 +188,7 @@ var sortKey="date",sortDir=-1;
 function esc(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]})}
 function formatQty(n){return new Intl.NumberFormat("da-DK").format(n)}
 function formatDate(s){var d=new Date(s);return new Intl.DateTimeFormat("da-DK",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}).format(d)}
-function qtyBucket(n){if(n<=100)return"0-100";if(n<=1000)return"101-1000";if(n<=5000)return"1001-5000";if(n<=10000)return"5001-10000";return"10001+"}
+function qtyBucket(n){if(!n)return"unknown";if(n<=1000)return"0-1000";if(n<=5000)return"1001-5000";if(n<=10000)return"5001-10000";if(n<=25000)return"10001-25000";return"25001+"}
 function statusClass(s){return {"Ny":"s-new","Under behandling":"s-work","Tilbud sendt":"s-quote","Vundet":"s-win","Tabt":"s-lost"}[s]||""}
 function csvSafe(v){var s=String(v==null?"":v);return '"'+s.replace(/"/g,'""')+'"'}
 
@@ -228,6 +228,7 @@ async function loadLive(){
         email:x.email||"",
         desc:x.description||"",
         qty:Number(x.quantity)||0,
+        quantityBucket:x.quantity_bucket||qtyBucket(Number(x.quantity)||0),
         material:x.material||"Ved ikke",
         delivery:x.delivery_bucket||"Ikke angivet",
         files:x.file_names?String(x.file_names).split("|||").filter(Boolean):[],
@@ -259,7 +260,7 @@ function filtered(){
  var cutoff=days==="all"?0:maxTime-(Number(days)-1)*86400000;
  var arr=leads.filter(function(x){
    if(cutoff && new Date(x.date).getTime()<cutoff)return false;
-   if(els.qty.value && qtyBucket(x.qty)!==els.qty.value)return false;
+   if(els.qty.value && x.quantityBucket!==els.qty.value)return false;
    if(els.material.value && x.material!==els.material.value)return false;
    if(els.status.value && x.status!==els.status.value)return false;
    if(q){
@@ -307,8 +308,8 @@ function renderTrend(data){
  svg.innerHTML='<defs><linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e3132f" stop-opacity=".34"/><stop offset="1" stop-color="#e3132f" stop-opacity="0"/></linearGradient></defs>'+grid+'<path class="area" d="'+area+'"/><path class="line" d="'+path+'"/>'+dots+labels;
 }
 function renderQty(data){
- var buckets=[["0-100","0–100"],["101-1000","101–1.000"],["1001-5000","1.001–5.000"],["5001-10000","5.001–10k"],["10001+","10k+"]],counts={};
- buckets.forEach(function(b){counts[b[0]]=0});data.forEach(function(x){counts[qtyBucket(x.qty)]++});
+ var buckets=[["0-1000","0–1.000"],["1001-5000","1.001–5.000"],["5001-10000","5.001–10k"],["10001-25000","10–25k"],["25001+","25k+"],["unknown","Ikke ang."]],counts={};
+ buckets.forEach(function(b){counts[b[0]]=0});data.forEach(function(x){counts[x.quantityBucket||qtyBucket(x.qty)]++});
  var max=Math.max(1,Math.max.apply(null,buckets.map(function(b){return counts[b[0]]})));
  document.getElementById("qtyChart").innerHTML=buckets.map(function(b){var v=counts[b[0]],h=Math.max(2,v/max*100);return'<div class="bar-col"><div class="bar" style="height:'+h+'%"></div><b class="bar-val" style="--h:'+h+'%">'+v+'</b><span class="bar-label">'+b[1]+'</span></div>'}).join("");
 }
