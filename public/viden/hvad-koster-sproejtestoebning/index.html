@@ -29,16 +29,30 @@
 </script>
 </head>
 <body>
-<header class="top"><div class="wrap topin">
-<a class="brand" href="/"><span class="mark" aria-hidden="true"></span><span><b>INJECT</b><small>Plastproduktion</small></span></a>
-<nav class="nav" aria-label="Hovedmenu">
-<a href="/sproejtestoebning/smaa-serier/">Sprøjtestøbning</a>
-<a href="/fra-3d-print-til-sproejtestoebning/">Fra 3D-print</a>
-<a class="current" aria-current="page" href="/viden/hvad-koster-sproejtestoebning/">Pris &amp; viden</a>
-<a href="/#materialer">Materialer</a>
-<a class="btn red" href="/#kontakt">Få vurderet dit emne</a>
-</nav>
-</div></header>
+<header class="top" id="top-bar">
+  <a class="brand" href="/" aria-label="Inject.dk – forside">
+    <svg viewBox="0 0 30 30" aria-hidden="true"><rect x="1" y="1" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M1 15.5h9" stroke="#e3132f" stroke-width="3"/><circle cx="17.5" cy="15.5" r="6.5" fill="#e3132f"/><circle cx="17.5" cy="15.5" r="2.1" fill="#0a0808"/></svg>
+    <span class="wm"><b>INJECT</b><small>Plastproduktion</small></span>
+  </a>
+  <nav class="nav" aria-label="Hovedmenu">
+    <a href="/sproejtestoebning/smaa-serier/">Sprøjtestøbning</a>
+    <a href="/fra-3d-print-til-sproejtestoebning/">Fra 3D-print</a>
+    <a class="current" aria-current="page" href="/viden/hvad-koster-sproejtestoebning/">Pris &amp; viden</a>
+    <a href="/#materialer">Materialer</a>
+  </nav>
+  <a class="btn btn-red btn-sm" href="/#kontakt">Få vurderet dit emne <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h13M9 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a>
+  <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="mnav">Menu</button>
+</header>
+
+<div class="mnav" id="mnav" hidden>
+  <a href="/sproejtestoebning/smaa-serier/">Sprøjtestøbning</a>
+  <a href="/fra-3d-print-til-sproejtestoebning/">Fra 3D-print</a>
+  <a class="current" aria-current="page" href="/viden/hvad-koster-sproejtestoebning/">Pris &amp; viden</a>
+  <a href="/#materialer">Materialer</a>
+  <a href="/#faq">FAQ</a>
+  <a href="/#kontakt" class="red">Kontakt</a>
+  <p>47 47 03 03 · contact@inject.dk</p>
+</div>
 
 <div class="wrap breadcrumb"><a href="/">Forside</a> / Viden / Hvad koster sprøjtestøbning?</div>
 
@@ -165,5 +179,27 @@
 </main>
 
 <footer class="foot"><div class="wrap footin"><span>Inject.dk · En del af JC Stål ApS · CVR 46414772</span><span><a href="tel:+4547470303">47 47 03 03</a> · <a href="mailto:contact@inject.dk">contact@inject.dk</a> · København</span></div></footer>
+<script>
+(function(){
+  var topbar=document.getElementById('top-bar');
+  var menuBtn=document.getElementById('menuBtn');
+  var mnav=document.getElementById('mnav');
+  function syncTop(){ if(topbar) topbar.classList.toggle('scrolled',window.scrollY>12); }
+  function setMenu(open){
+    if(!mnav||!menuBtn)return;
+    mnav.hidden=!open;
+    menuBtn.setAttribute('aria-expanded',open?'true':'false');
+    menuBtn.textContent=open?'Luk':'Menu';
+    document.body.style.overflow=open?'hidden':'';
+  }
+  if(menuBtn&&mnav){
+    menuBtn.addEventListener('click',function(){setMenu(mnav.hidden);});
+    mnav.addEventListener('click',function(e){if(e.target.closest('a'))setMenu(false);});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!mnav.hidden)setMenu(false);});
+  }
+  syncTop();
+  window.addEventListener('scroll',syncTop,{passive:true});
+})();
+</script>
 </body>
 </html>
