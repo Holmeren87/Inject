@@ -277,6 +277,25 @@ async function createRfq(request, env) {
       "INSERT INTO audit_log(request_id, actor, action, field_name, old_value, new_value) VALUES (?, ?, ?, ?, ?, ?)"
     ).bind(requestId, "public_form", "request_created", "status", null, "new").run();
 
+    const notification = await sendLeadNotification(env, {
+      caseNumber,
+      companyName: text(data.company_name || data.company, 240),
+      contactName,
+      quantityBucket: quantityBucketValue,
+      material: text(data.material, 120) || "Ved ikke",
+      delivery: text(data.delivery_bucket || data.delivery, 120) || "Ikke angivet"
+    });
+
+    await env.DB.prepare(
+      "INSERT INTO request_events(request_id, event_name, event_value, session_id, page_url) VALUES (?, ?, ?, ?, ?)"
+    ).bind(
+      requestId,
+      notification.sent ? "lead_notification_sent" : (notification.skipped ? "lead_notification_skipped" : "lead_notification_failed"),
+      JSON.stringify(notification),
+      text(data.session_id, 160),
+      text(data.landing_page, 1200)
+    ).run();
+
     return json({
       ok: true,
       case_number: caseNumber,
@@ -288,6 +307,51 @@ async function createRfq(request, env) {
     console.error("createRfq", error);
     return json({ ok: false, error: "request_failed" }, 500);
   }
+}
+
+async function sendLeadNotification(env, lead) {
+  if (!env.EMAIL) return { skipped: true, reason: "email_binding_missing" };
+
+  const subject = `Nyt lead på Inject · ${lead.caseNumber}`;
+  const textBody =
+    `Nyt lead på Inject\n\n` +
+    `Sagsnr.: ${lead.caseNumber}\n` +
+    `Kunde: ${lead.companyName || "Privat"}\n` +
+    `Kontakt: ${lead.contactName}\n` +
+    `Antal: ${lead.quantityBucket || "Ikke angivet"}\n` +
+    `Materiale: ${lead.material || "Ved ikke"}\n` +
+    `Levering: ${lead.delivery || "Ikke angivet"}\n\n` +
+    `Åbn admin: https://inject.dk/admin/\n`;
+
+  try {
+    await env.EMAIL.send({
+      to: "contact@inject.dk",
+      from: "lead@notify.inject.dk",
+      subject,
+      text: textBody,
+      html:
+        '<div style="font-family:Arial,sans-serif;line-height:1.5;color:#111">' +
+        '<h2 style="margin:0 0 14px">Nyt lead på Inject</h2>' +
+        '<p><strong>Sagsnr.:</strong> ' + escapeHtml(lead.caseNumber) + '<br>' +
+        '<strong>Kunde:</strong> ' + escapeHtml(lead.companyName || "Privat") + '<br>' +
+        '<strong>Kontakt:</strong> ' + escapeHtml(lead.contactName) + '<br>' +
+        '<strong>Antal:</strong> ' + escapeHtml(lead.quantityBucket || "Ikke angivet") + '<br>' +
+        '<strong>Materiale:</strong> ' + escapeHtml(lead.material || "Ved ikke") + '<br>' +
+        '<strong>Levering:</strong> ' + escapeHtml(lead.delivery || "Ikke angivet") + '</p>' +
+        '<p><a href="https://inject.dk/admin/">Åbn Inject Admin</a></p>' +
+        '</div>'
+    });
+    return { sent: true };
+  } catch (error) {
+    console.error("lead notification failed", error);
+    return { sent: false, error: String(error && error.message || error) };
+  }
+}
+
+function escapeHtml(value) {
+  return String(value == null ? "" : value).replace(/[&<>"']/g, function (ch) {
+    return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;" }[ch];
+  });
 }
 
 async function recordPublicEvent(request, env) {
