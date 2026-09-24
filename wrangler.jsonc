@@ -18,5 +18,8 @@
       "binding": "FILES",
       "bucket_name": "inject-files"
     }
-  ]
+  ],
+  "secrets": {
+    "required": ["RESEND_API_KEY"]
+  }
 }
