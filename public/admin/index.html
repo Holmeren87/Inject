@@ -155,7 +155,7 @@ h1{font:780 clamp(27px,3vw,42px)/1 var(--display);font-stretch:122%;letter-spaci
       <div class="table-scroll">
         <table class="table">
           <thead><tr>
-            <th data-sort="id">ID</th><th data-sort="date">Dato</th><th data-sort="company">Virksomhed</th><th data-sort="contact">Kontakt</th><th data-sort="desc">Emne / beskrivelse</th><th data-sort="qty">Antal</th><th data-sort="material">Materiale</th><th data-sort="delivery">Levering</th><th>Filer</th><th data-sort="status">Status</th>
+            <th data-sort="id">ID</th><th data-sort="date">Dato</th><th data-sort="company">Virksomhed</th><th data-sort="contact">Kontakt</th><th data-sort="desc">Emne / beskrivelse</th><th data-sort="qty">Antal</th><th data-sort="material">Materiale</th><th data-sort="delivery">Levering</th><th>Filer</th><th>Note</th><th data-sort="status">Status</th>
           </tr></thead>
           <tbody id="rows"></tbody>
         </table>
@@ -235,7 +235,8 @@ async function loadLive(){
         status:apiStatusToUi(x.status),
         responseHours:responseHours(x.created_at,x.first_response_at),
         source:x.source||x.utm_source||"Ukendt",
-        note:x.internal_note||""
+        note:x.internal_note||"",
+        hasNote:!!(x.internal_note&&String(x.internal_note).trim())
       };
     });
     refreshMaterialOptions();
@@ -342,7 +343,7 @@ function renderHbars(data){
  make("deliveryBars",delivery);make("fileBars",files);
 }
 function renderTable(data){
- els.rows.innerHTML=data.map(function(x){return'<tr data-id="'+x.id+'"><td class="id">'+x.id+'</td><td>'+formatDate(x.date)+'</td><td>'+esc(x.company)+'</td><td>'+esc(x.contact)+'</td><td class="desc" title="'+esc(x.desc)+'">'+esc(x.desc)+'</td><td>'+(x.qty?formatQty(x.qty):esc(x.quantityBucket==="unknown"?"Ikke angivet":x.quantityBucket))+'</td><td>'+esc(x.material)+'</td><td>'+esc(x.delivery)+'</td><td>📎 '+x.files.length+'</td><td><span class="status '+statusClass(x.status)+'">'+esc(x.status)+'</span></td></tr>'}).join("");
+ els.rows.innerHTML=data.map(function(x){return'<tr data-id="'+x.id+'"><td class="id">'+x.id+'</td><td>'+formatDate(x.date)+'</td><td>'+esc(x.company)+'</td><td>'+esc(x.contact)+'</td><td class="desc" title="'+esc(x.desc)+'">'+esc(x.desc)+'</td><td>'+(x.qty?formatQty(x.qty):esc(x.quantityBucket==="unknown"?"Ikke angivet":x.quantityBucket))+'</td><td>'+esc(x.material)+'</td><td>'+esc(x.delivery)+'</td><td>📎 '+x.files.length+'</td><td><span class="status '+(x.hasNote?'s-win':'s-lost')+'">'+(x.hasNote?'Ja':'Nej')+'</span></td><td><span class="status '+statusClass(x.status)+'">'+esc(x.status)+'</span></td></tr>'}).join("");
  els.empty.hidden=data.length>0;els.tableCount.textContent=data.length+" "+(data.length===1?"post":"poster");
  Array.prototype.forEach.call(els.rows.querySelectorAll("tr"),function(tr){tr.addEventListener("click",function(){openLead(tr.getAttribute("data-id"))})});
 }
@@ -383,7 +384,7 @@ async function openLead(id){
      try{
        var res=await fetch("/admin/api/requests/"+encodeURIComponent(x.id),{method:"PATCH",headers:{"content-type":"application/json","accept":"application/json"},body:JSON.stringify({internal_note:note})});
        if(!res.ok)throw new Error("HTTP "+res.status);
-       x.note=note;showToast("Noten er gemt");
+       x.note=note;x.hasNote=!!String(note||"").trim();render();showToast("Noten er gemt");
      }catch(err){console.error(err);showToast("Noten kunne ikke gemmes")}finally{btn.disabled=false}
    });
  }catch(err){
