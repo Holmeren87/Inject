@@ -332,7 +332,8 @@ async function listRequests(request, env) {
       r.first_response_at, r.quote_sent_at, r.quote_amount, r.won_at, r.lost_at, r.lost_reason,
       r.assigned_to, r.internal_note, r.created_at, r.updated_at,
       c.company_name, c.contact_name, c.email, c.phone, c.vat_number, c.country_code,
-      COUNT(f.id) AS file_count
+      COUNT(f.id) AS file_count,
+      GROUP_CONCAT(f.original_name, '|||') AS file_names
     FROM requests r
     JOIN customers c ON c.id = r.customer_id
     LEFT JOIN request_files f ON f.request_id = r.id
