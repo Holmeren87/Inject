@@ -351,7 +351,8 @@ async function sendLeadNotification(env, lead) {
         method: "POST",
         headers: {
           "authorization": "Bearer " + env.RESEND_API_KEY,
-          "content-type": "application/json"
+          "content-type": "application/json",
+          "Idempotency-Key": "inject-lead/" + lead.caseNumber
         },
         body: requestBody
       });
