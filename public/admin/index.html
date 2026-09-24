@@ -98,7 +98,7 @@ h1{font:780 clamp(27px,3vw,42px)/1 var(--display);font-stretch:122%;letter-spaci
 
     <div class="headline">
       <div><div class="eyebrow">Inject · Admin</div><h1>Produktionsdashboard</h1><div class="sub">Forespørgsler, efterspørgsel, materialer og ordredata samlet ét sted.</div></div>
-      <div class="demo">Demo-data · backend kobles på næste trin</div>
+      <div class="demo" id="liveState">Forbinder til D1…</div>
     </div>
 
     <section class="kpis" aria-label="Nøgletal">
@@ -175,26 +175,7 @@ h1{font:780 clamp(27px,3vw,42px)/1 var(--display);font-stretch:122%;letter-spaci
 <script>
 (function(){
 "use strict";
-var leads=[
-{id:"INJ-2026-0028",date:"2026-09-24T10:42",company:"Nordform ApS",contact:"Maja Lund",email:"maja@example.dk",desc:"Kabelholder med snap-fit",qty:2500,material:"PA",delivery:"4–8 uger",files:["kabelholder.step","mål.pdf"],status:"Ny",responseHours:null,source:"Google Ads",note:"Ønsker sort emne og mulighed for 2-kavitetsværktøj."},
-{id:"INJ-2026-0027",date:"2026-09-24T08:31",company:"TeknoLab A/S",contact:"Jonas Mikkelsen",email:"jonas@example.dk",desc:"Afstandsbøsning til elektronik",qty:10000,material:"POM",delivery:"4–8 uger",files:["boesning_v4.stp"],status:"Ny",responseHours:null,source:"Organisk",note:"Har eksisterende 3D-print og vil ned i stykpris."},
-{id:"INJ-2026-0026",date:"2026-09-23T14:18",company:"GreenSystems",contact:"Sara Holm",email:"sara@example.dk",desc:"Kabinet, UV-stabilt",qty:1200,material:"PC",delivery:"8–12 uger",files:["housing.step","front.pdf","reference.jpg"],status:"Under behandling",responseHours:3.2,source:"Direkte",note:"Udendørs brug. Materialevalg skal verificeres."},
-{id:"INJ-2026-0025",date:"2026-09-22T11:05",company:"Flex Components",contact:"Anders Birk",email:"anders@example.dk",desc:"Beslag med to integrerede clips",qty:5000,material:"PP",delivery:"4–8 uger",files:["clip-holder.step","drawing.pdf"],status:"Tilbud sendt",responseHours:4.4,source:"Google Ads",note:"Pris sendt på 1- og 2-kavitet."},
-{id:"INJ-2026-0024",date:"2026-09-21T16:21",company:"BuildRight A/S",contact:"Mikkel Sørensen",email:"mikkel@example.dk",desc:"Dæksel med snap-fit",qty:500,material:"ABS",delivery:"< 4 uger",files:["cover.step","photo.png"],status:"Under behandling",responseHours:5.1,source:"Henvisning",note:"Prototype ønskes før værktøj."},
-{id:"INJ-2026-0023",date:"2026-09-20T09:14",company:"Motion Parts",contact:"Line Bæk",email:"line@example.dk",desc:"Lille glideblok",qty:8000,material:"POM",delivery:"4–8 uger",files:["slider.stp"],status:"Vundet",responseHours:2.4,source:"Organisk",note:"Godkendt til prøveværktøj."},
-{id:"INJ-2026-0022",date:"2026-09-19T13:45",company:"Nexa Works",contact:"Oliver Tran",email:"oliver@example.dk",desc:"Prop til alu-profil",qty:15000,material:"TPE",delivery:"8–12 uger",files:["plug.step","section.pdf"],status:"Tilbud sendt",responseHours:7.0,source:"Google Ads",note:"Shore-hårdhed mangler."},
-{id:"INJ-2026-0021",date:"2026-09-18T08:12",company:"CPH Devices",contact:"Nina Storm",email:"nina@example.dk",desc:"Knap til betjeningspanel",qty:750,material:"ABS",delivery:"< 4 uger",files:["button.step"],status:"Vundet",responseHours:1.8,source:"Henvisning",note:"Farveprøve skal godkendes."},
-{id:"INJ-2026-0020",date:"2026-09-16T15:02",company:"Arko Teknik",contact:"Per Nielsen",email:"per@example.dk",desc:"Føring til kabelbakke",qty:3000,material:"PA",delivery:"4–8 uger",files:["guide.step","assembly.pdf"],status:"Under behandling",responseHours:6.2,source:"Direkte",note:"Skal tåle gentagne klik."},
-{id:"INJ-2026-0019",date:"2026-09-15T10:26",company:"Studio Form",contact:"Eva Møller",email:"eva@example.dk",desc:"Designemne med logo",qty:250,material:"ABS",delivery:"8–12 uger",files:["part.stp","logo.svg","render.jpg"],status:"Tabt",responseHours:8.3,source:"Organisk",note:"Valgte 3D-print pga. antal."},
-{id:"INJ-2026-0018",date:"2026-09-13T12:10",company:"Volt Systems",contact:"Kim Juul",email:"kim@example.dk",desc:"Isolerende holder",qty:5000,material:"PBT",delivery:"4–8 uger",files:["holder.step","spec.pdf"],status:"Tilbud sendt",responseHours:4.9,source:"Google Ads",note:"Temperaturkrav oplyst i PDF."},
-{id:"INJ-2026-0017",date:"2026-09-12T09:37",company:"MicroFab",contact:"Sofie Grau",email:"sofie@example.dk",desc:"Mini clips til sensor",qty:20000,material:"PA",delivery:"> 12 uger",files:["sensor_clip.step"],status:"Under behandling",responseHours:5.6,source:"Direkte",note:"Stor årlig volumen."},
-{id:"INJ-2026-0016",date:"2026-09-10T14:55",company:"RenoTech",contact:"Martin Friis",email:"martin@example.dk",desc:"Reservedel til udgået produkt",qty:180,material:"POM",delivery:"< 4 uger",files:["scan.stl","dimensions.pdf","oldpart.jpg"],status:"Vundet",responseHours:3.7,source:"Organisk",note:"Ingen STEP. Skal rekonstrueres."},
-{id:"INJ-2026-0015",date:"2026-09-09T11:42",company:"Nordic Display",contact:"Asta Ravn",email:"asta@example.dk",desc:"Skjult monteringsclip",qty:1000,material:"PP",delivery:"4–8 uger",files:["clip_v7.step"],status:"Tabt",responseHours:6.8,source:"Google Ads",note:"Pris sammenlignet med eksisterende leverandør."},
-{id:"INJ-2026-0014",date:"2026-09-07T08:29",company:"Machina ApS",contact:"Thomas Due",email:"thomas@example.dk",desc:"Beskyttelseshætte",qty:6000,material:"TPE",delivery:"8–12 uger",files:["cap.step","drawing.pdf"],status:"Vundet",responseHours:2.7,source:"Henvisning",note:"Gentagelsesordre forventes."},
-{id:"INJ-2026-0013",date:"2026-09-05T16:08",company:"LabCraft",contact:"Marie Voss",email:"marie@example.dk",desc:"Prøveholder til laboratorieudstyr",qty:80,material:"PC",delivery:"Ikke angivet",files:["sampleholder.step"],status:"Under behandling",responseHours:9.1,source:"Organisk",note:"Meget lille første serie."},
-{id:"INJ-2026-0012",date:"2026-09-03T10:11",company:"SkanMount",contact:"Jesper Falk",email:"jesper@example.dk",desc:"Montageklods",qty:1500,material:"POM",delivery:"4–8 uger",files:["mount.step"],status:"Tilbud sendt",responseHours:4.2,source:"Direkte",note:"Tolerancer skal gennemgås."},
-{id:"INJ-2026-0011",date:"2026-09-01T07:52",company:"ProtoWorks",contact:"Lasse Kamp",email:"lasse@example.dk",desc:"Overgang fra 3D-print til serie",qty:400,material:"PP",delivery:"8–12 uger",files:["part.step","printed-part.jpg"],status:"Vundet",responseHours:2.9,source:"Henvisning",note:"Klassisk overgang fra print til støbning."}
-];
+var leads=[];
 
 var els={
  search:document.getElementById("search"),range:document.getElementById("range"),qty:document.getElementById("qtyFilter"),
@@ -211,8 +192,65 @@ function qtyBucket(n){if(n<=100)return"0-100";if(n<=1000)return"101-1000";if(n<=
 function statusClass(s){return {"Ny":"s-new","Under behandling":"s-work","Tilbud sendt":"s-quote","Vundet":"s-win","Tabt":"s-lost"}[s]||""}
 function csvSafe(v){var s=String(v==null?"":v);return '"'+s.replace(/"/g,'""')+'"'}
 
-var materials=Array.from(new Set(leads.map(function(x){return x.material}))).sort();
-materials.forEach(function(m){var o=document.createElement("option");o.value=m;o.textContent=m;els.material.appendChild(o)});
+function refreshMaterialOptions(){
+  var current=els.material.value;
+  while(els.material.options.length>1) els.material.remove(1);
+  Array.from(new Set(leads.map(function(x){return x.material}).filter(Boolean))).sort().forEach(function(m){
+    var o=document.createElement("option");o.value=m;o.textContent=m;els.material.appendChild(o);
+  });
+  if(Array.from(els.material.options).some(function(o){return o.value===current})) els.material.value=current;
+}
+
+function apiStatusToUi(s){
+  return {new:"Ny",reviewing:"Under behandling",quoted:"Tilbud sendt",won:"Vundet",lost:"Tabt",closed:"Lukket"}[s]||s||"Ny";
+}
+function uiStatusToApi(s){
+  return {"Ny":"new","Under behandling":"reviewing","Tilbud sendt":"quoted","Vundet":"won","Tabt":"lost","Lukket":"closed"}[s]||"new";
+}
+function responseHours(created, firstResponse){
+  if(!firstResponse)return null;
+  var a=new Date(created).getTime(),b=new Date(firstResponse).getTime();
+  if(!Number.isFinite(a)||!Number.isFinite(b)||b<a)return null;
+  return Math.round(((b-a)/3600000)*10)/10;
+}
+async function loadLive(){
+  var state=document.getElementById("liveState");
+  try{
+    var res=await fetch("/admin/api/requests?limit=500",{headers:{"accept":"application/json"},cache:"no-store"});
+    if(!res.ok)throw new Error("HTTP "+res.status);
+    var payload=await res.json();
+    leads=(payload.requests||[]).map(function(x){
+      return {
+        id:x.case_number,
+        date:x.created_at,
+        company:x.company_name||"Privat",
+        contact:x.contact_name||"",
+        email:x.email||"",
+        desc:x.description||"",
+        qty:Number(x.quantity)||0,
+        material:x.material||"Ved ikke",
+        delivery:x.delivery_bucket||"Ikke angivet",
+        files:x.file_names?String(x.file_names).split("|||").filter(Boolean):[],
+        status:apiStatusToUi(x.status),
+        responseHours:responseHours(x.created_at,x.first_response_at),
+        source:x.source||x.utm_source||"Ukendt",
+        note:x.internal_note||""
+      };
+    });
+    refreshMaterialOptions();
+    state.textContent="LIVE · D1 + R2";
+    state.style.color="var(--green)";
+    state.style.borderColor="rgba(70,201,137,.35)";
+    state.style.background="rgba(70,201,137,.08)";
+    render();
+  }catch(err){
+    console.error(err);
+    state.textContent="DATAFORBINDELSE FEJLEDE";
+    state.style.color="var(--red2)";
+    render();
+    showToast("Kunne ikke hente D1-data");
+  }
+}
 
 function filtered(){
  var q=els.search.value.trim().toLowerCase();
@@ -312,10 +350,24 @@ function openLead(id){
  els.drawerContent.innerHTML='<div class="drawer-k">'+x.id+'</div><h2>'+esc(x.desc)+'</h2><div class="drawer-company">'+esc(x.company)+' · '+esc(x.contact)+'</div>'+
  '<div class="detail-grid"><div class="detail"><span>Antal</span><b>'+formatQty(x.qty)+' stk.</b></div><div class="detail"><span>Materiale</span><b>'+esc(x.material)+'</b></div><div class="detail"><span>Levering</span><b>'+esc(x.delivery)+'</b></div><div class="detail"><span>Kilde</span><b>'+esc(x.source)+'</b></div><div class="detail"><span>Modtaget</span><b>'+formatDate(x.date)+'</b></div><div class="detail"><span>Svartid</span><b>'+(x.responseHours==null?"Ikke besvaret":String(x.responseHours).replace(".",",")+" timer")+'</b></div></div>'+
  '<section class="drawer-section"><h3>Kontakt</h3><div>'+esc(x.contact)+'</div><div style="color:var(--mute);margin-top:4px">'+esc(x.email)+'</div></section>'+
- '<section class="drawer-section"><h3>Filer</h3>'+x.files.map(function(f){return'<div class="file"><span>'+esc(f)+'</span><small>Demo</small></div>'}).join("")+'</section>'+
+ '<section class="drawer-section"><h3>Filer</h3>'+x.files.map(function(f){return'<div class="file"><span>'+esc(f)+'</span><small>Upload</small></div>'}).join("")+'</section>'+
  '<section class="drawer-section"><h3>Intern note</h3><div style="color:var(--bone2);line-height:1.55">'+esc(x.note)+'</div></section>'+
  '<section class="drawer-section"><h3>Status</h3><select class="status-select" id="drawerStatus">'+["Ny","Under behandling","Tilbud sendt","Vundet","Tabt"].map(function(s){return'<option'+(s===x.status?" selected":"")+'>'+s+'</option>'}).join("")+'</select></section>';
- document.getElementById("drawerStatus").addEventListener("change",function(e){x.status=e.target.value;render();showToast(x.id+" er ændret til "+x.status)});
+ document.getElementById("drawerStatus").addEventListener("change",async function(e){
+   var select=e.target,old=x.status,next=select.value;
+   select.disabled=true;
+   try{
+     var res=await fetch("/admin/api/requests/"+encodeURIComponent(x.id),{
+       method:"PATCH",
+       headers:{"content-type":"application/json","accept":"application/json"},
+       body:JSON.stringify({status:uiStatusToApi(next)})
+     });
+     if(!res.ok)throw new Error("HTTP "+res.status);
+     x.status=next;render();showToast(x.id+" er ændret til "+x.status);
+   }catch(err){
+     console.error(err);select.value=old;showToast("Status kunne ikke gemmes");
+   }finally{select.disabled=false}
+ });
  els.drawer.classList.add("on");els.backdrop.classList.add("on");els.drawer.setAttribute("aria-hidden","false");
 }
 function closeDrawer(){els.drawer.classList.remove("on");els.backdrop.classList.remove("on");els.drawer.setAttribute("aria-hidden","true")}
@@ -330,7 +382,7 @@ document.getElementById("exportCsv").addEventListener("click",function(){
 });
 Array.prototype.forEach.call(document.querySelectorAll("th[data-sort]"),function(th){th.addEventListener("click",function(){var k=th.getAttribute("data-sort");if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=k==="date"||k==="qty"?-1:1}render()})});
 document.getElementById("drawerClose").addEventListener("click",closeDrawer);els.backdrop.addEventListener("click",closeDrawer);document.addEventListener("keydown",function(e){if(e.key==="Escape")closeDrawer()});
-render();
+loadLive();
 })();
 </script>
 </body>
