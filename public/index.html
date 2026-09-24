@@ -677,24 +677,53 @@ details[open] .x::after{transform:scaleY(0)}
         <div class="d-row"><span class="k">CVR</span><span class="v">46414772<small style="display:block;margin-top:6px;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)">En del af JC Stål ApS</small></span><button class="copy" type="button" data-copy="46414772">Kopiér</button></div>
         <p class="aside">Inject.dk · Produktudvikling, prototyper, værktøj og sprøjtestøbning – fra idé til serieproduktion.</p>
       </div>
-      <form class="form panel rv" id="form" novalidate>
+      <form class="form panel rv" id="form" novalidate enctype="multipart/form-data">
         <p class="f-head">Få dit emne vurderet</p>
         <div class="f-grid">
           <div class="field"><label for="f-name">Navn *</label><input id="f-name" name="name" autocomplete="name" required><span class="err">Skriv dit navn.</span></div>
           <div class="field"><label for="f-company">Virksomhed</label><input id="f-company" name="company" autocomplete="organization"></div>
           <div class="field"><label for="f-email">E-mail *</label><input id="f-email" name="email" type="email" autocomplete="email" required><span class="err">Skriv en gyldig e-mailadresse.</span></div>
           <div class="field"><label for="f-phone">Telefon</label><input id="f-phone" name="phone" type="tel" autocomplete="tel"></div>
+
           <div class="field"><label for="f-stage">Hvad har du i dag?</label>
-            <select id="f-stage" name="stage"><option>Kun en idé</option><option>Skitse eller tegning</option><option>Fysisk emne</option><option>STL / 3D-print</option><option>STEP / STP</option><option>Produktionsklart design</option></select></div>
+            <select id="f-stage" name="stage">
+              <option>Kun en idé</option><option>Skitse eller tegning</option><option>Fysisk emne</option><option>STL / 3D-print</option><option>STEP / STP</option><option>Produktionsklart design</option>
+            </select>
+          </div>
+
           <div class="field"><label for="f-qty">Forventet antal</label>
-            <select id="f-qty" name="qty"><option>Ved ikke endnu</option><option>100–500</option><option>500–1.000</option><option>1.000–5.000</option><option>5.000–10.000</option><option>10.000+</option></select></div>
-          <div class="field full"><label for="f-mat">Materiale</label>
-            <select id="f-mat" name="mat"><option>Ved ikke endnu</option><option>PP</option><option>PE</option><option>ABS</option><option>PA (nylon)</option><option>POM</option><option>PC</option><option>TPE</option><option>PBT</option><option>Andet</option></select></div>
+            <select id="f-qty" name="qty">
+              <option value="unknown">Ved ikke endnu</option>
+              <option value="0-1000">0–1.000 stk.</option>
+              <option value="1001-5000">1.001–5.000 stk.</option>
+              <option value="5001-10000">5.001–10.000 stk.</option>
+              <option value="10001-25000">10.001–25.000 stk.</option>
+              <option value="25001+">25.001+ stk.</option>
+            </select>
+          </div>
+
+          <div class="field"><label for="f-mat">Materiale</label>
+            <select id="f-mat" name="mat">
+              <option>Ved ikke endnu</option><option>PP</option><option>PE</option><option>ABS</option><option>PA (nylon)</option><option>POM</option><option>PC</option><option>TPE</option><option>PBT</option><option>Andet</option>
+            </select>
+          </div>
+
+          <div class="field"><label for="f-delivery">Ønsket levering</label>
+            <select id="f-delivery" name="delivery">
+              <option>Ikke angivet</option><option>&lt; 4 uger</option><option>4–8 uger</option><option>8–12 uger</option><option>&gt; 12 uger</option>
+            </select>
+          </div>
+
+          <div class="field full"><label for="f-files">Filer</label>
+            <input id="f-files" name="files" type="file" multiple accept=".step,.stp,.stl,.pdf,.dxf,.jpg,.jpeg,.png,.webp">
+            <span class="err">Maks. 8 filer, 25 MB pr. fil.</span>
+          </div>
+
           <div class="field full"><label for="f-msg">Fortæl om emnet *</label><textarea id="f-msg" name="msg" placeholder="Hvad skal det bruges til? Hvad er vigtigt? Har du mål, særlige krav eller en ønsket mængde?" required></textarea><span class="err">Fortæl kort om emnet.</span></div>
         </div>
         <div class="f-foot">
-          <p class="fine">Formularen åbner din mailklient med oplysningerne udfyldt. Har du STEP, STL, tegning eller billeder, vedhæfter du dem i mailen.</p>
-          <button class="btn btn-red" type="submit">Send til vurdering <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h13M9 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+          <p class="fine">STEP/STP, STL, PDF, DXF og billeder kan vedhæftes direkte. Din forespørgsel gemmes sikkert med et permanent INJ-sagsnummer.</p>
+          <button class="btn btn-red" id="f-submit" type="submit">Send til vurdering <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h13M9 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
         </div>
         <p class="f-status" id="f-status" hidden></p>
       </form>
@@ -1000,34 +1029,126 @@ details[open] .x::after{transform:scaleY(0)}
     });
   });
 
-  /* ---------- form -> prefilled e-mail ---------- */
+  /* ---------- server-side RFQ form ---------- */
   var form = document.getElementById('form');
   if (form) {
     var status = document.getElementById('f-status');
-    form.addEventListener('submit', function (e) {
+    var submitBtn = document.getElementById('f-submit');
+    var fileInput = document.getElementById('f-files');
+    var startedTracked = false;
+
+    var sessionId = '';
+    try {
+      sessionId = sessionStorage.getItem('inject_session_id') || crypto.randomUUID();
+      sessionStorage.setItem('inject_session_id', sessionId);
+    } catch (e) {
+      sessionId = String(Date.now()) + '-' + Math.random().toString(36).slice(2);
+    }
+
+    var sendEvent = function (name, value) {
+      try {
+        fetch('/api/events', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            event_name: name,
+            event_value: value || null,
+            session_id: sessionId,
+            page_url: location.href
+          }),
+          keepalive: true
+        }).catch(function(){});
+      } catch (e) {}
+    };
+
+    form.addEventListener('input', function (e) {
+      var fl = e.target.closest('.field');
+      if (fl) fl.classList.remove('bad');
+      if (!startedTracked) {
+        startedTracked = true;
+        sendEvent('form_started', null);
+      }
+    }, { passive: true });
+
+    fileInput.addEventListener('change', function () {
+      var files = Array.from(fileInput.files || []);
+      var valid = files.length <= 8 && files.every(function (file) { return file.size > 0 && file.size <= 25 * 1024 * 1024; });
+      fileInput.closest('.field').classList.toggle('bad', !valid);
+      if (files.length) sendEvent('file_added', JSON.stringify({ count: files.length, extensions: files.map(function(f){ return (f.name.split('.').pop() || '').toLowerCase(); }) }));
+    });
+
+    form.addEventListener('submit', async function (e) {
       e.preventDefault();
       var f = form.elements;
       var ok = true;
-      var check = function (el, valid) { el.closest('.field').classList.toggle('bad', !valid); if (!valid && ok) { el.focus(); } ok = ok && valid; };
+      var check = function (el, valid) {
+        el.closest('.field').classList.toggle('bad', !valid);
+        if (!valid && ok) el.focus();
+        ok = ok && valid;
+      };
+
       check(f.name, f.name.value.trim().length > 1);
       check(f.email, /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email.value.trim()));
       check(f.msg, f.msg.value.trim().length > 4);
-      if (!ok) return;
-      var subject = 'Forespørgsel fra ' + f.name.value.trim() + (f.company.value.trim() ? ' (' + f.company.value.trim() + ')' : '');
-      var bodyTxt = 'Navn: ' + f.name.value.trim() +
-        '\nVirksomhed: ' + (f.company.value.trim() || '–') +
-        '\nE-mail: ' + f.email.value.trim() +
-        '\nTelefon: ' + (f.phone.value.trim() || '–') +
-        '\nUdgangspunkt: ' + f.stage.value +
-        '\nForventet antal: ' + f.qty.value +
-        '\nMateriale: ' + f.mat.value +
-        '\n\n' + f.msg.value.trim() +
-        '\n\n(Husk at vedhæfte relevante STEP/STP-, STL-, PDF- eller billedfiler)';
+
+      var files = Array.from(fileInput.files || []);
+      var filesOk = files.length <= 8 && files.every(function (file) { return file.size > 0 && file.size <= 25 * 1024 * 1024; });
+      fileInput.closest('.field').classList.toggle('bad', !filesOk);
+      ok = ok && filesOk;
+
+      if (!ok) {
+        sendEvent('form_validation_error', 'client_validation');
+        return;
+      }
+
+      var params = new URLSearchParams(location.search);
+      var payload = new FormData();
+      payload.append('contact_name', f.name.value.trim());
+      payload.append('company_name', f.company.value.trim());
+      payload.append('email', f.email.value.trim());
+      payload.append('phone', f.phone.value.trim());
+      payload.append('current_process', f.stage.value);
+      payload.append('quantity_bucket', f.qty.value);
+      payload.append('material', f.mat.value);
+      payload.append('delivery_bucket', f.delivery.value);
+      payload.append('description', f.msg.value.trim());
+      payload.append('session_id', sessionId);
+      payload.append('landing_page', location.href);
+      payload.append('referrer', document.referrer || '');
+      payload.append('utm_source', params.get('utm_source') || '');
+      payload.append('utm_medium', params.get('utm_medium') || '');
+      payload.append('utm_campaign', params.get('utm_campaign') || '');
+      payload.append('utm_term', params.get('utm_term') || '');
+      payload.append('utm_content', params.get('utm_content') || '');
+      payload.append('gclid', params.get('gclid') || '');
+      payload.append('source', params.get('utm_source') || (document.referrer ? 'Referral' : 'Direct'));
+      files.forEach(function (file) { payload.append('files', file, file.name); });
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sender…';
       status.hidden = false;
-      status.innerHTML = 'Din mailklient burde nu åbne med forespørgslen udfyldt. Sker der ikke noget, så skriv direkte til <b>contact@inject.dk</b> eller ring på <b>47 47 03 03</b> – og vedhæft gerne STEP/STP, STL, tegning eller billeder.';
-      try { window.location.href = 'mailto:contact@inject.dk?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(bodyTxt); } catch (err) {}
+      status.textContent = 'Uploader og registrerer din forespørgsel…';
+
+      try {
+        var response = await fetch('/api/rfq', {
+          method: 'POST',
+          headers: { 'accept': 'application/json' },
+          body: payload
+        });
+        var result = await response.json().catch(function(){ return {}; });
+        if (!response.ok || !result.ok) throw new Error(result.error || 'request_failed');
+
+        status.innerHTML = '<b>Tak – din forespørgsel er modtaget.</b><br>Sagsnummer: <span class="mono">' + result.case_number + '</span>. Vi vender tilbage hurtigst muligt.';
+        form.reset();
+        startedTracked = false;
+      } catch (err) {
+        console.error(err);
+        status.innerHTML = 'Der opstod en fejl under afsendelsen. Prøv igen, eller skriv til <b>contact@inject.dk</b> / ring <b>47 47 03 03</b>.';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Send til vurdering <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h13M9 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>';
+      }
     });
-    form.addEventListener('input', function (e) { var fl = e.target.closest('.field'); if (fl) fl.classList.remove('bad'); });
   }
 
   /* ---------- loader counter ---------- */
