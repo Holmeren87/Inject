@@ -7,11 +7,11 @@
 <title>Inject.dk – Fra idé til serieproduktion</title>
 <meta name="description" content="Inject.dk hjælper med produktudvikling, 3D-printede prototyper, værktøj og sprøjtestøbning i små og mellemstore serier – fra idé til serieproduktion.">
 <meta name="theme-color" content="#0a0808">
-<meta name="robots" content="noindex,nofollow">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">\n<link rel="canonical" href="https://inject.dk/">\n<meta property="og:type" content="website">\n<meta property="og:locale" content="da_DK">\n<meta property="og:site_name" content="Inject.dk">\n<meta property="og:title" content="Inject.dk – Fra idé til serieproduktion">\n<meta property="og:description" content="Produktudvikling, prototyper, værktøj og sprøjtestøbning i små og mellemstore serier – konkurrencedygtigt helt ned til få hundrede emner.">\n<meta property="og:url" content="https://inject.dk/">\n<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"LocalBusiness","name":"Inject.dk","description":"Produktudvikling, prototyper, værktøj og sprøjtestøbning i små og mellemstore serier – fra idé til serieproduktion.","telephone":"+45 47 47 03 03","email":"contact@inject.dk","vatID":"DK46414772","address":{"@type":"PostalAddress","addressLocality":"København","addressCountry":"DK"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"LocalBusiness","@id":"https://inject.dk/#business","name":"Inject.dk","url":"https://inject.dk/","description":"Dansk plastproducent med produktudvikling, 3D-printede prototyper, værktøj og sprøjtestøbning i små og mellemstore serier – fra idé til serieproduktion.","telephone":"+45 47 47 03 03","email":"contact@inject.dk","vatID":"DK46414772","address":{"@type":"PostalAddress","addressLocality":"København","addressCountry":"DK"},"areaServed":{"@type":"Country","name":"Danmark"}},{"@type":"WebSite","@id":"https://inject.dk/#website","url":"https://inject.dk/","name":"Inject.dk","inLanguage":"da-DK","publisher":{"@id":"https://inject.dk/#business"}}]}</script>
 <style>
 :root{
   color-scheme:dark;
@@ -97,14 +97,8 @@ body[data-side="c"] .scrim-l{opacity:1;width:100%;background:linear-gradient(180
 @keyframes ldBar{to{transform:scaleX(1)}}
 
 
-/* ---------- build notice ---------- */
-.build-note{position:fixed;top:0;left:0;right:0;z-index:120;min-height:34px;display:flex;align-items:center;justify-content:center;padding:7px 52px;text-align:center;background:#e3132f;color:#fff;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
-.build-note strong{color:#fff}
-.build-note span{opacity:.9;font-weight:500}
-@media (max-width:640px){.build-note{padding:7px 14px;font-size:9px;line-height:1.35}.top{top:42px}}
-
 /* ---------- header ---------- */
-.top{position:fixed;top:34px;left:0;right:0;z-index:20;display:flex;align-items:center;gap:28px;padding:calc(env(safe-area-inset-top,0px) + 22px) calc(var(--gut) + 6px) 20px;transition:background .5s,padding .5s}
+.top{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;gap:28px;padding:calc(env(safe-area-inset-top,0px) + 22px) calc(var(--gut) + 6px) 20px;transition:background .5s,padding .5s}
 .top.scrolled{background:linear-gradient(to bottom,rgba(10,8,8,.92),rgba(10,8,8,.55) 70%,rgba(10,8,8,0));padding-top:calc(env(safe-area-inset-top,0px) + 14px);padding-bottom:14px}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--bone)}
 .brand svg{width:30px;height:30px;flex:none}
@@ -384,7 +378,6 @@ details[open] .x::after{transform:scaleY(0)}
 
 </head>
 <body>
-<div class="build-note" role="status"><strong>Under opbygning</strong>&nbsp; <span>Inject.dk er under udvikling. Indhold, kapacitet og ydelser kan ændre sig frem mod lancering.</span></div>
 <div class="loader" id="loader" aria-hidden="true">
   <div class="ld-in">
     <div class="ld-wm">INJECT<span>.</span></div>
