@@ -720,7 +720,7 @@ details[open] .x::after{transform:scaleY(0)}
           </div>
 
           <div class="field full"><label for="f-files">Filer</label>
-            <input id="f-files" name="files" type="file" multiple accept=".step,.stp,.stl,.pdf,.dxf,.jpg,.jpeg,.png,.webp">
+            <input id="f-files" name="files" type="file" multiple accept=".step,.stp,.stl,.pdf,.dxf,.jpg,.jpeg,.png,.webp,.heic,.heif,image/*">
             <span class="err">Maks. 8 filer, 25 MB pr. fil.</span>
           </div>
 
@@ -1148,7 +1148,11 @@ details[open] .x::after{transform:scaleY(0)}
         startedTracked = false;
       } catch (err) {
         console.error(err);
-        status.innerHTML = 'Der opstod en fejl under afsendelsen. Prøv igen, eller skriv til <b>contact@inject.dk</b> / ring <b>47 47 03 03</b>.';
+        var code = err && err.message ? err.message : 'request_failed';
+        var msg = 'Der opstod en fejl under afsendelsen. Prøv igen, eller skriv til <b>contact@inject.dk</b> / ring <b>47 47 03 03</b>.';
+        if (code === 'file_type_not_allowed') msg = 'En af filerne har et format, vi ikke kan modtage endnu. Prøv uden filen eller brug STEP, STP, STL, PDF, DXF eller et almindeligt billede.';
+        if (code === 'file_too_large' || code === 'files_total_too_large') msg = 'En eller flere filer er for store. Maks. 25 MB pr. fil og 60 MB samlet.';
+        status.innerHTML = msg;
       } finally {
         submitBtn.disabled = false;
         submitBtn.innerHTML = 'Send til vurdering <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h13M9 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>';
