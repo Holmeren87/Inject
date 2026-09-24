@@ -121,11 +121,18 @@ function money(value) {
 
 function quantityBucket(n) {
   if (!n) return "unknown";
-  if (n <= 100) return "0-100";
-  if (n <= 1000) return "101-1000";
+  if (n <= 1000) return "0-1000";
   if (n <= 5000) return "1001-5000";
   if (n <= 10000) return "5001-10000";
-  return "10001+";
+  if (n <= 25000) return "10001-25000";
+  return "25001+";
+}
+
+function normalizedQuantityBucket(value, quantity) {
+  const allowed = new Set(["0-1000","1001-5000","5001-10000","10001-25000","25001+","unknown"]);
+  const v = text(value, 40);
+  if (v && allowed.has(v)) return v;
+  return quantityBucket(quantity);
 }
 
 function sanitizeFilename(name) {
@@ -175,6 +182,7 @@ async function createRfq(request, env) {
     if (totalBytes > MAX_TOTAL_BYTES) throw new HttpError(400, "files_total_too_large");
 
     const quantity = positiveInt(data.quantity);
+    const quantityBucketValue = normalizedQuantityBucket(data.quantity_bucket, quantity);
     const annualQuantity = positiveInt(data.annual_quantity);
     const now = new Date();
     const year = now.getUTCFullYear();
@@ -206,7 +214,7 @@ async function createRfq(request, env) {
       customerId,
       description,
       quantity,
-      quantityBucket(quantity),
+      quantityBucketValue,
       annualQuantity,
       text(data.material, 120) || "Ved ikke",
       text(data.material_other, 200),
@@ -260,7 +268,7 @@ async function createRfq(request, env) {
     ).bind(
       requestId,
       "rfq_submitted",
-      JSON.stringify({ files: storedFiles.length, quantity_bucket: quantityBucket(quantity) }),
+      JSON.stringify({ files: storedFiles.length, quantity_bucket: quantityBucketValue }),
       text(data.session_id, 160),
       text(data.landing_page, 1200)
     ).run();
