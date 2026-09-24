@@ -9,7 +9,7 @@
 }
 *{box-sizing:border-box}html{background:var(--bg);scroll-behavior:smooth}body{margin:0;background:
 radial-gradient(900px 450px at 80% 0%,rgba(227,19,47,.09),transparent 65%),var(--bg);color:var(--bone);font-family:var(--body);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased}
-a{color:inherit}img{max-width:100%}:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+a{color:inherit}.red{color:var(--red)}img{max-width:100%}:focus-visible{outline:2px solid var(--red);outline-offset:3px}
 .wrap{max-width:var(--max);margin:auto;padding-inline:var(--gut)}
 .top{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;gap:28px;padding:calc(env(safe-area-inset-top,0px) + 22px) calc(var(--gut) + 6px) 20px;transition:background .5s,padding .5s}
 .top.scrolled{background:linear-gradient(to bottom,rgba(10,8,8,.96),rgba(10,8,8,.72) 72%,rgba(10,8,8,0));padding-top:calc(env(safe-area-inset-top,0px) + 14px);padding-bottom:14px}
