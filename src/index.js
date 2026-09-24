@@ -310,7 +310,7 @@ async function createRfq(request, env) {
 }
 
 async function sendLeadNotification(env, lead) {
-  if (!env.EMAIL) return { skipped: true, reason: "email_binding_missing" };
+  if (!env.RESEND_API_KEY) return { skipped: true, reason: "resend_api_key_missing" };
 
   const subject = `Nyt lead på Inject · ${lead.caseNumber}`;
   const textBody =
@@ -323,28 +323,44 @@ async function sendLeadNotification(env, lead) {
     `Levering: ${lead.delivery || "Ikke angivet"}\n\n` +
     `Åbn admin: https://inject.dk/admin/\n`;
 
+  const htmlBody =
+    '<div style="font-family:Arial,sans-serif;line-height:1.5;color:#111">' +
+    '<h2 style="margin:0 0 14px">Nyt lead på Inject</h2>' +
+    '<p><strong>Sagsnr.:</strong> ' + escapeHtml(lead.caseNumber) + '<br>' +
+    '<strong>Kunde:</strong> ' + escapeHtml(lead.companyName || "Privat") + '<br>' +
+    '<strong>Kontakt:</strong> ' + escapeHtml(lead.contactName) + '<br>' +
+    '<strong>Antal:</strong> ' + escapeHtml(lead.quantityBucket || "Ikke angivet") + '<br>' +
+    '<strong>Materiale:</strong> ' + escapeHtml(lead.material || "Ved ikke") + '<br>' +
+    '<strong>Levering:</strong> ' + escapeHtml(lead.delivery || "Ikke angivet") + '</p>' +
+    '<p><a href="https://inject.dk/admin/">Åbn Inject Admin</a></p>' +
+    '</div>';
+
   try {
-    await env.EMAIL.send({
-      to: "contact@inject.dk",
-      from: "lead@notify.inject.dk",
-      subject,
-      text: textBody,
-      html:
-        '<div style="font-family:Arial,sans-serif;line-height:1.5;color:#111">' +
-        '<h2 style="margin:0 0 14px">Nyt lead på Inject</h2>' +
-        '<p><strong>Sagsnr.:</strong> ' + escapeHtml(lead.caseNumber) + '<br>' +
-        '<strong>Kunde:</strong> ' + escapeHtml(lead.companyName || "Privat") + '<br>' +
-        '<strong>Kontakt:</strong> ' + escapeHtml(lead.contactName) + '<br>' +
-        '<strong>Antal:</strong> ' + escapeHtml(lead.quantityBucket || "Ikke angivet") + '<br>' +
-        '<strong>Materiale:</strong> ' + escapeHtml(lead.material || "Ved ikke") + '<br>' +
-        '<strong>Levering:</strong> ' + escapeHtml(lead.delivery || "Ikke angivet") + '</p>' +
-        '<p><a href="https://inject.dk/admin/">Åbn Inject Admin</a></p>' +
-        '</div>'
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "authorization": "Bearer " + env.RESEND_API_KEY,
+        "content-type": "application/json"
+      },
+      body: JSON.stringify({
+        from: "Inject Leads <leads@notify.inject.dk>",
+        to: ["contact@inject.dk"],
+        subject,
+        text: textBody,
+        html: htmlBody
+      })
     });
-    return { sent: true };
+
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      console.error("Resend lead notification failed", response.status, payload);
+      return { sent: false, provider: "resend", status: response.status, error: payload?.message || "resend_failed" };
+    }
+
+    return { sent: true, provider: "resend", id: payload?.id || null };
   } catch (error) {
     console.error("lead notification failed", error);
-    return { sent: false, error: String(error && error.message || error) };
+    return { sent: false, provider: "resend", error: String(error && error.message || error) };
   }
 }
 
